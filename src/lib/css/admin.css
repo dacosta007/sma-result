@@ -1,0 +1,21 @@
+.dashboard {
+  padding-top: 6.5em;
+}
+.hero-container {
+  width: 100%;
+  margin-bottom: 1em;
+}
+.page-name {
+  color: var(--clr-off-white);
+  font-family: var(--font-quicksand);
+  font-weight: 400;
+  font-size: 2.5em;
+  text-transform: capitalize;
+  line-height: 0;
+}
+
+@media (min-width: 700px) {
+  .hero-container {
+    padding-top: 0;
+  }
+}
