@@ -1,6 +1,7 @@
-/** @type {import('./$types').PageLoad} */
-export async function load({ params }) {
+
+export async function load({ params, fetch }) {
   let res = params.slipId
+  
   console.log(params)
   return {
     res,
