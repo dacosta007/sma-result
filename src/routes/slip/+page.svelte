@@ -1,5 +1,5 @@
 <script>
-  import { $StudentStore } from "$lib/stores/StudentStore"
+  import { StudentStore } from "$lib/stores/StudentStore"
 
   console.log($StudentStore)
   console.log(localStorage.students)
