@@ -38,17 +38,6 @@
   <footer class="copyright-sec">
     <small>Copyright &copy;2022. AFSS Ibadan<sup>&trade;</sup> All rights Reserved</small>
   </footer>
-
-
-  <!-- <div>
-    <a href="/login">Login</a> 
-    <a href="/signup">Signup</a> 
-    <a href="/admin/result">Result page</a> 
-    <a href="/result-021223">Print result page</a> 
-    <a href="/admin/student">Student page</a> 
-    <a href="/admin/teacher">teacher page</a> 
-    <a href="/slip/slip-1212">print reg slip page</a>
-  </div> -->
 </main>
 
 <style>

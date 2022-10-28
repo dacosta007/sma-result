@@ -1,6 +1,6 @@
 import { writable } from "svelte/store"
 
-let localData = JSON.parse(localStorage.students)
+// let localData = JSON.parse(localStorage.students)
 
-export const LocalStore = writable(localData)
+export const LocalStore = writable([])
 

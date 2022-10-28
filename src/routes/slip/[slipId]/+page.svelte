@@ -5,8 +5,6 @@
   export let data
 
   const { std } = data
-
-  console.log(std)
 </script>
 
 <svelte:head>

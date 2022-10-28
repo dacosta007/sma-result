@@ -31,6 +31,7 @@
   let dataRes
   let stdDB  
   let stdDataOnSys  = localData ? localData : loadData();
+  $LocalStore = JSON.parse(localStorage.students)
   let listStudt = $LocalStore , totalStudt = $LocalStore
 </script>
 

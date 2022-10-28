@@ -24,10 +24,11 @@
   // get passport from local sys
   let stdImg = localData.find((ele => ele.studtId === info.studtId && ele.passport != null))
   info.passport = stdImg ?? null;
-  
+  $LocalStore = JSON.parse(localStorage.students)
+  // console.log($LocalStore)
 </script>
 
-<div class="show-info-sec" fade={{delay: 1, duration: 10}}>
+<div class="show-info-sec" transition:fade={{delay: 1, duration: 10}}>
   <div class="std-info">
     <div class="std-avatar">
       <div class="img">
