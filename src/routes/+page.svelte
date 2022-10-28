@@ -2,7 +2,7 @@
   let quickLinks = [
     { title: 'student', subTitle: 'reg', href: "/student",  icon: 'ti-id-badge' },
     { title: 'print', subTitle: 'slip', href: '/slip', icon: 'ti-file' },
-    { title: 'result', subTitle: 'compute', href: '/admin/result', icon: 'ti-files' }
+    { title: 'result', subTitle: 'compute', href: '/result', icon: 'ti-files' }
   ]
 </script>
 

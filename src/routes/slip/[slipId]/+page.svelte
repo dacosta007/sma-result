@@ -1,10 +1,46 @@
 <script>
-  export let data = {}
+  import SlipHeader from "$lib/components/SlipHeader.svelte";
+  import SlipBody from "./SlipBody.svelte";
+
+  export let data
+
+  const { std } = data
+
+  console.log(std)
 </script>
 
-<article>
-  <h2>Slip Page</h2>
-  <pre>{data.res}</pre>
-  <pre>{data.content}</pre>
-  <a href="/">go back home</a> 
+<svelte:head>
+  <meta name="viewport" content="width=device-width, initial-scale=0" />
+</svelte:head>
+
+<article class="slip-container">
+  <section class="slip">
+    <SlipHeader slipTitle={'Student Pre-Registration'} />
+
+    <SlipBody {std} watermark={'reg slip'} />
+  </section>
 </article>
+
+<style>
+  .slip-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    width: 100%;
+  }
+  .slip {
+    background-color: var(--clr-white);
+    color: var(--clr-txt);
+    border-radius: 1px;
+    width: 760px;
+    padding: 2em 3em;
+  }
+
+  @media print {
+    .slip {
+      margin: 0;
+      padding: 0;
+    }
+  }
+</style>

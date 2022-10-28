@@ -34,6 +34,15 @@ html, body {
   color: var(--clr-sec);
 }
 
+.title {
+  font-family: var(--font-quicksand);
+  text-transform: capitalize;
+  letter-spacing: 1px;
+}
+
+.center-text {
+  text-align: center;
+}
 .two-grid-container, .two-grid-container-rwd {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

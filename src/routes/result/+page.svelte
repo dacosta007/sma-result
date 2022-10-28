@@ -1,5 +1,5 @@
 <script>
-
+  import { LocalStore } from "$lib/stores/LocalStore" 
 </script>
 
 <article>
