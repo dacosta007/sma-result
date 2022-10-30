@@ -1,0 +1,48 @@
+<script>
+  import { ResultStore } from "$lib/stores/ResultStore"
+  import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
+
+  import SlipHeader from "$lib/components/SlipHeader.svelte";
+  import ResultBody from "./ResultBody.svelte";
+  
+  export let reportData
+  export let docId
+  
+  console.log($ResultStore)
+</script>
+
+<!-- <svelte:head>
+  <meta name="viewport" content="width=device-width, initial-scale=0" />
+</svelte:head> -->
+
+<section class="slip-container">
+  <div class="slip">
+    <SlipHeader slipTitle={'Mid-Term Report'} />
+
+    <ResultBody report={reportData.branch002} docId={docId} />
+  </div>
+</section>
+
+<style>
+  .slip-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    width: 100%;
+  }
+  .slip {
+    background-color: var(--clr-white);
+    color: var(--clr-txt);
+    border-radius: 1px;
+    width: 760px;
+    padding: 2em 3em;
+  }
+
+  @media print {
+    .slip {
+      margin: 0;
+      padding: 0;
+    }
+  }
+</style>

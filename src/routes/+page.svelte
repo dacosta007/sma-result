@@ -1,4 +1,11 @@
 <script>
+  import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
+  import { ResultStore } from "$lib/stores/ResultStore"
+  export let data
+
+  BranchInfoStore.set(data.branchInfo)
+  ResultStore.set(data.resultData)
+
   let quickLinks = [
     { title: 'student', subTitle: 'reg', href: "/student",  icon: 'ti-id-badge' },
     { title: 'print', subTitle: 'slip', href: '/slip', icon: 'ti-file' },
@@ -24,7 +31,7 @@
     <!-- links to pages -->
     <section class="quick-nav">
       {#each quickLinks as link}
-        <a href="{link.href}">
+        <a href="{link.href}" data-sveltekit-prefetch>
           <i class="ti {link.icon}"></i>
           <div>
             <span>{link.subTitle}</span>

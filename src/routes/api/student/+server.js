@@ -39,3 +39,13 @@ export async function POST({ request }) {
     return new Response(JSON.stringify({ error: err }), { status: 500 });
   }
 }
+
+export async function GET({ fetch }) {
+  let res = await fetch(`${baseUrl}/student`)
+  let studts = await res.json()
+  studts = studts.branch002
+
+  return new Response(JSON.stringify({
+    studts
+  }))
+}

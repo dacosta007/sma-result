@@ -7,7 +7,7 @@
 
   import { genStudtId, genRandStr } from "$lib/components/utils/genId"
 
-  export let data
+  // export let data
 
   let btnProps = {
     btnType: 'submit',
@@ -122,7 +122,6 @@
     }).catch(err => console.error(err.message))
   }
 
-  console.log(data)
 </script>
 
 <article class="studt-reg-section" out:fade={{delay: 0.5, duration: 20}}>

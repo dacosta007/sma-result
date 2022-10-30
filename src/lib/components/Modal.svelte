@@ -16,7 +16,7 @@
 <aside class="modal" class:show-modal={showModal} transition:fade>
   <div class="modal-content">
     <div class="close-modal-container">
-      <span class="close-modal" on:keydown={closeModal}>&#10005;</span>
+      <span class="close-modal" on:click={closeModal} on:keydown={closeModal}>&#10005;</span>
     </div>
     <!-- modal contents -->
     <slot />

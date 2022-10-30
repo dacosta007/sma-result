@@ -274,11 +274,11 @@
   }
 
   @media print {
-  .slip-watermart {
-    font-size: 9vw;
+    .slip-watermart {
+      font-size: 9vw;
+    }
+    .btn {
+      display: none;
+    }
   }
-  .btn {
-    display: none;
-  }
-}
 </style>
