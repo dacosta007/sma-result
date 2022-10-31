@@ -128,7 +128,7 @@
     <div class="notice">
       <!-- result QRcode -->
       <div class="result-qrcode">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=1100x110&amp;data={meta.studtId} " alt="result_qrcode" width="110" height="auto">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=1100x110&amp;data=htttps://result.afssib.com/{meta.studtId} " alt="result_qrcode" width="110" height="auto">
       </div>
       <!-- result notice -->
       <div>
@@ -271,7 +271,6 @@
   }
   .result-qrcode {
     width: 110px;
-    height: 100px;
     position: relative;
   }
   .notice p {

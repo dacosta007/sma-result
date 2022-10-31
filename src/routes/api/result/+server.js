@@ -22,11 +22,17 @@ export async function POST({ request, fetch }) {
   }
 
   if (results.branch002 != undefined) {
-    results.branch002.push(resultData)
+    let stdIndx = (results.branch002).findIndex(ele => ele.meta.studtId === resultData.meta.studtId)
+    if (stdIndx === -1) { 
+      // console.log(`stdIndx: can't be found`)
+      results.branch002.push(resultData)
+     } else {
+      //  console.log(`stdIndx: ${stdIndx}`)
+       results.branch002[stdIndx] = resultData
+     }
   }
 
   try {
-
     let saveData = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },

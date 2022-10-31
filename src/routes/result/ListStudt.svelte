@@ -96,7 +96,6 @@
     showModal = evt.detail
   }
 
-  let report = {}
   // add record into store
   function addRecord() {
     if (currentAddedSubj.length <= 0) {
@@ -151,7 +150,7 @@
         .then(res => res.json())
         .then(res => {
           ResultStore.update((items) => {
-            return items = [saveFrmt, ...items]
+            return items = res.res
           })
           console.log(res)
           console.log($ResultStore)
@@ -162,26 +161,26 @@
           alert('report is successfully added to Database 😀')
         })
         .catch(err => console.log(err))
-
-      report = saveFrmt
-
       return
     }
 
-  
     saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
     saveFrmt.midTerm.comments[academicYear.currentTerm] = saveData.comments
     saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
-
+    
     // add report to store
     ResultStore.update((items) => {
       if (items === undefined) {
         return items = [saveFrmt]
       }
-      return items = [saveFrmt, ...items]
+
+      // if result already found in DB(update its index by studtId)
+      let indx = $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
+      console.log(`stdIndx: ${indx}`)
+      items[indx] = saveFrmt
+      return items
     })
 
-    report = saveFrmt
     // save to database
     fetch('/api/result', {
       method: 'post',
@@ -191,11 +190,16 @@
       .then(res => res.json())
       .then(res => {
         console.log(res)
-        console.log($ResultStore)
+        console.log(`Previously Adde to DB: ${$ResultStore.length}`)
+        console.log($ResultStore.set(res))
+        console.log(`Total added to DB: ${$ResultStore.length}`)
+
+        // link to preview student's result
+        disableLink = false
         // close compute modal & clear currentAddedSubj
         currentAddedSubj = []
         showModal = false
-        console.log('modal window closed!')
+
         alert('report is successfully added to Database 😀')
       })
       .catch(err => console.error(err))
@@ -234,7 +238,6 @@
       
       currentAddedSubj = getRept
 
-      console.log(getRept)
       // show current clicked student
       stdDetail = std
       showModal = true
@@ -249,12 +252,16 @@
 
 
   // help show result slip
-  function veiwResult(event) {
-    let stdId = event.target.dataset.stdId
-    let std = allStudts.find(s => s.studtId === stdId)
-
-    // display result slip for printing and saving 
-    stdDetail = std
+  let disableLink = true;
+  function veiwResult() {
+    // check if result is saved before previewing 
+    let chkRpt =  $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
+    if (chkRpt === -1) {
+      disableLink = true;
+      alert(`Please save/add "${stdDetail.name.first} ${stdDetail.name.last}'s"  report record before previewing!`)
+      return
+    }
+    disableLink = false;
   }
 </script>
 
@@ -320,8 +327,8 @@
       <i class="ti ti-save"></i> <span>add record</span>
     </Button>
 
-    <a href="/{stdDetail.studtId}" rel="noreferrer" target="_blank">
-      <Button btnType={'button'} sec={true}>
+    <a href="/{stdDetail.studtId}" rel="noreferrer" target="_blank" on:click={veiwResult} disabled={disableLink}>
+      <Button btnType={'button'} sec={true} btnDisabled={disableLink}>
         <i class="ti ti-eye"></i> <span>preveiw</span>
       </Button>
     </a>

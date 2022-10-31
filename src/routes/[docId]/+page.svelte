@@ -4,11 +4,13 @@
 
 
   export let data
-  let { res } = data
-  // console.log(res.branch002)
-  // console.log(data.docId)
-  // console.log(`Doc ID: ${data.docId}`)
+  
 </script>
+
+<svelte:head>
+  <title>Student Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=0.0">
+</svelte:head>
 
 <article>
   <ResultSlip reportData={data.res} docId={data.docId} />

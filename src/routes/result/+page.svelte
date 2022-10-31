@@ -7,7 +7,15 @@
   export let data
   
   LocalStore.set(data.studts.studts)
-</script>
+
+  </script>
+
+<!-- in case redirected back from printing report document -->
+<svelte:head>
+  <title>Student Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</svelte:head>
+
 
 <article class="result-pg">
   <h2 class="center-text">Compute Result </h2>
@@ -35,7 +43,6 @@
     display: grid;
     grid-template-columns: 3fr 2fr;
     width: 75%;
-    border: 1px solid;
   }
   .studts-sec {
     padding: 0.5em 2em;

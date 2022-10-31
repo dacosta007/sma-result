@@ -16,13 +16,15 @@
   }
 
   let totalStudts = studts.length
-  let reptComptd = $ResultStore.length
+  let reptComptd
 
   if ($ResultStore === undefined) {
     reptComptd = 0
     btnProps.disableBtn = true
   }
-
+  if ($ResultStore.length > 0) {
+    reptComptd = $ResultStore.length
+  }
 
   $:reptRemain = totalStudts - reptComptd
 </script>

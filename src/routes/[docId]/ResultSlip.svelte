@@ -1,14 +1,9 @@
 <script>
-  import { ResultStore } from "$lib/stores/ResultStore"
-  import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
-
   import SlipHeader from "$lib/components/SlipHeader.svelte";
   import ResultBody from "./ResultBody.svelte";
   
   export let reportData
   export let docId
-  
-  console.log($ResultStore)
 </script>
 
 <!-- <svelte:head>
