@@ -7,6 +7,7 @@
   import Modal from "$lib/components/Modal.svelte"
   import Button from "$lib/components/Button.svelte";
   import AddSubj from "./AddSubj.svelte";
+  import AddComment from "./AddComment.svelte"
 
   export let allStudts
   export let resultPref
@@ -25,6 +26,10 @@
     success: true
   }
 
+  let commentBtn = {
+    btnType: 'button',
+    sec: true
+  }
   let stdDetail = studts[1]
   let currentAddedSubj = []
   // holds principal and teacher's comments
@@ -140,6 +145,8 @@
     // check if record is previously found in the ResultStore(gotten from DB)
     if ($ResultStore != undefined) {
       saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
+      saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
+      saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
       saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
 
       fetch('/api/result', {
@@ -165,7 +172,8 @@
     }
 
     saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
-    saveFrmt.midTerm.comments[academicYear.currentTerm] = saveData.comments
+    saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
+    saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
     saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
     
     // add report to store
@@ -206,6 +214,7 @@
     return
   }
 
+
   function filterList(event) {
     if (event.target.value === '') { listStudt = studts; return }
 
@@ -234,10 +243,13 @@
         showModal = true
         return
       }
-      getRept = getRept.midTerm.report[academicYear.currentTerm]
-      
-      currentAddedSubj = getRept
+      // set teacher's and principal's comments if available
+      tComment = getRept.midTerm.comments[academicYear.currentTerm].teacher
+      pComment = getRept.midTerm.comments[academicYear.currentTerm].principal
 
+      let records = getRept.midTerm.report[academicYear.currentTerm]
+      
+      currentAddedSubj = records
       // show current clicked student
       stdDetail = std
       showModal = true
@@ -250,7 +262,6 @@
     showModal = true
   }
 
-
   // help show result slip
   let disableLink = true;
   function veiwResult() {
@@ -262,6 +273,22 @@
       return
     }
     disableLink = false;
+  }
+
+  let addReptComment = false
+  // handles adding report comments
+  function reportComments(evt) {
+    tComment = evt.detail.tComment
+    pComment = evt.detail.pComment
+    console.log({tComment, pComment})
+
+    addReptComment = false;
+  }
+
+  // show section for adding comments on report
+  function showCommentSec() {
+    console.log(stdDetail)
+    addReptComment = true
   }
 </script>
 
@@ -312,6 +339,19 @@
 
   <!-- section for all added subjects/records -->
   <section class="show-add-rec">
+    <!-- display where to add comments to records -->
+    {#if addReptComment}
+      <AddComment 
+        on:reportComments={reportComments} 
+        on:closeCommentSec={(evt) => addReptComment = evt.detail} 
+        {addReptComment} 
+        reportData={currentAddedSubj} 
+        obtainable={resultPref.midTerm.obtainable} 
+        {tComment} 
+        {pComment}
+      />
+    {/if}
+    
     {#each currentAddedSubj as subjs}
       <AddSubj subj={subjs} on:removeSubj={removeSubj} />
     {:else}
@@ -323,15 +363,21 @@
 
   <!-- action button to close or save record -->
   <footer class="cta-footer">
-    <Button {...btnProps} on:click={addRecord}>
-      <i class="ti ti-save"></i> <span>add record</span>
-    </Button>
-
     <a href="/{stdDetail.studtId}" rel="noreferrer" target="_blank" on:click={veiwResult} disabled={disableLink}>
       <Button btnType={'button'} sec={true} btnDisabled={disableLink}>
         <i class="ti ti-eye"></i> <span>preveiw</span>
       </Button>
     </a>
+
+    <div class="save-cta">
+      <Button {...btnProps} on:click={addRecord}>
+        <i class="ti ti-save"></i> <span>add record</span>
+      </Button>
+
+      <Button {...commentBtn} on:click={showCommentSec}>
+        <i class="ti ti-pencil"></i> <span>comment</span>
+      </Button>
+    </div>
   </footer>
 </Modal>
 
@@ -517,9 +563,14 @@
   }
   .cta-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding-top: 0.4em;
     gap: 2em;
+  }
+  .save-cta {
+    display: flex;
+    gap: 2em;
+    align-items: center;
   }
 </style>

@@ -16,6 +16,8 @@
   let term = 'first'
 
   let results = midTerm.report[term]
+  let tComment = midTerm.comments[term].teacher
+  let pComment = midTerm.comments[term].principal
   let cummInfo = cummulative.midTerm[term]
   let { obtainable, obtained, totalSubj, percentage } = cummInfo
 
@@ -23,7 +25,6 @@
     console.log('printing slip')
     window.print()
   }
-
 </script>
 
 <!-- basic student info -->
@@ -31,6 +32,7 @@
 <div class="center-text">
   <h3 class="std-name">{meta.name.first} {meta.name.last}</h3>
 </div>
+
 <section class="rept-info">
   <div class="img-sec">
   </div>
@@ -45,7 +47,12 @@
       <span class="info-title">class</span>
       <span class="info"><span>{meta.class.category} {meta.class.level}</span>
       <sup style="text-transform: uppercase;">{meta.class.subLevel}</sup>
-    </span>
+      </span>
+    </div>
+    <!-- department -->
+    <div class="std-info">
+      <span class="info-title">department</span>
+      <span class="info">{meta.class.department}</span>
     </div>
     <!-- session -->
     <div class="std-info">
@@ -115,11 +122,11 @@
   <article class="comments-sec">
     <div class="comments">
       <h5>teacher's remarks:</h5>
-      <i class="comment"></i>
+      <i class="comment">{tComment}</i>
     </div>
     <div class="comments">
       <h5>principal's remarks</h5>
-      <i class="comment"></i>
+      <i class="comment">{pComment}</i>
     </div>
   </article>
 
@@ -151,7 +158,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 3em;
+    gap: 1em;
     position: relative;
   }
   .std-name {
@@ -166,22 +173,22 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     gap: 1em;
-    padding: 1em 0.5em;
+    padding: 0.5em .5em;
   }
   .infos {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5em;
+    grid-template-columns: repeat(3,1fr);
+    gap: .3em;
   }
   .img-sec {
     background-color: var(--clr-off-white);
-    height: 130px;
+    height: 100px;
     border: 2px solid var(--clr-grey);
     border-radius: 4px;
   }
   .std-info {
     line-height: 1;
-    margin-bottom: 1em;
+    margin-bottom: 0em;
     display: grid;
   }
   .info-title {
@@ -192,6 +199,7 @@
   }
   .info {
     text-transform: capitalize;
+    font-size: 14px;
   }
   .result-sec {
     width: 100%;
@@ -204,23 +212,42 @@
     font-family: var(--font-quicksand);
     font-variant: all-small-caps;
     font-size: 17px;
-    font-weight: bold;
+    font-weight: 700;
     gap: 1em;
-    padding: 0.7em 0.5em;
     background-color: var(--clr-sec);
     color: var(--clr-white);
+    border-bottom: 1px solid var(--clr-off-white);
+  }
+  .rept-analysis div:not(:last-child) {
+    border-right: 1px solid var(--clr-off-white);
+    padding: 0.4em 0.5em;
   }
   .rept-dt {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
     gap: 1em;
-    padding: 0.5em;
+    padding: 0.1em .5em;
+    align-items: center;
+  }
+  .rept-dt:not(:last-child) {
+    border-bottom: 1px solid var(--clr-off-white);
+  }
+  .rept-dt div:not(:last-child) {
+    border-right: 1px solid var(--clr-off-white);
+  }
+  .rept-dt div:nth-child(1) {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .rept-dt div:not(:nth-child(1)) {
+    font-size: 12px;
   }
   .cumm-sec {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0.4em 0.5em;
+    padding: 0.3em 0.5em;
     border: 2px dashed var(--clr-grey);
     border-radius: 2px;
     gap: 0.5em;
@@ -232,6 +259,7 @@
     font-family: var(--font-quicksand);
     display: inline-block;
     margin-left: 5px;
+    font-size: 15px;
   }
   .comments-sec {
     width: 100%;
@@ -248,11 +276,17 @@
     font-size: 15px;
     letter-spacing: 1px;
   }
+  .comments {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   .comment {
     border-bottom: 2px dotted var(--clr-grey);
-    padding-top: 0.5em;
-    font-size: 13px;
+    font-size: 12px;
     display: block;
+    width: 77%;
   }
   .comment::first-letter {
     text-transform: capitalize;
@@ -260,7 +294,7 @@
   .notice-container {
     display: grid;
     place-items: center;
-    margin-top: -1.2em;
+    margin-top: 0em;
   }
   .notice {
     width: 100%;

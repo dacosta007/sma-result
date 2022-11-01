@@ -1,5 +1,5 @@
 <script>
-  import SlipHeader from "$lib/components/SlipHeader.svelte";
+  import ResultHeader from "./ResultHeader.svelte";
   import ResultBody from "./ResultBody.svelte";
   
   export let reportData
@@ -12,8 +12,8 @@
 
 <section class="slip-container">
   <div class="slip">
-    <SlipHeader slipTitle={'Mid-Term Report'} />
-
+    <ResultHeader />
+    
     <ResultBody report={reportData.branch002} docId={docId} />
   </div>
 </section>
