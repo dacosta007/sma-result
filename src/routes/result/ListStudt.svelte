@@ -287,7 +287,7 @@
 
   // show section for adding comments on report
   function showCommentSec() {
-    console.log(stdDetail)
+    // console.log(stdDetail)
     addReptComment = true
   }
 </script>

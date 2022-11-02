@@ -2,6 +2,10 @@
   import { createEventDispatcher } from "svelte";
   import { gradeScore } from "$lib/components/utils/gradeScore";
   import { comments } from "$lib/components/utils/preDefinedComments"
+<<<<<<< HEAD
+=======
+
+>>>>>>> auth
   import Button from "$lib/components/Button.svelte"
 
   export let addReptComment = false
@@ -21,11 +25,12 @@
 
   function stats() {
     let obtained = reportData.reduce((acc, ele) => ele.totalMark + acc, 0)
-    let percentage = parseFloat(((obtained / obtainable) * 100).toFixed(2))
     let totalSubj = reportData.length
+    let obtainableMark = obtainable * totalSubj
+    let percentage = parseFloat(((obtained / obtainableMark) * 100).toFixed(2))
     let { grade, gradeClr } = gradeScore(percentage)
 
-    return { obtained, percentage, totalSubj, grade, gradeClr }
+    return { obtained, obtainableMark, percentage, totalSubj, grade, gradeClr }
   }
 
   function checkCommentNotEmpty(event) {
@@ -65,7 +70,7 @@
       <div class="stats-sec">
         <!-- obtainable, obtained, percentage, grade -->
         <div class="stat-info">
-          <span>obtainable</span> <span>{obtainable}</span>
+          <span>obtainable</span> <span>{stats().obtainableMark}</span>
         </div> 
         <div class="stat-info">
           <span>obtained</span> <span>{stats().obtained}</span>
@@ -91,7 +96,11 @@
             <option>{commt}</option>
           {/each}
         </select>
+<<<<<<< HEAD
         <!-- <textarea  name="tComment" id="tComment" cols="6" rows="5" height="59" placeholder="Teacher's Remarks"></textarea> -->
+=======
+        <!-- <textarea on:input={checkCommentNotEmpty} bind:value={tComment} name="tComment" id="tComment" cols="6" rows="5" height="59" placeholder="Teacher's Remarks"></textarea> -->
+>>>>>>> auth
       </div>
       <div class="input-field">
         <label for="pComment">principal comment</label>
@@ -101,7 +110,11 @@
             <option>{commt}</option>
           {/each}
         </select>
+<<<<<<< HEAD
         <!-- <textarea  name="pComment" id="pComment" cols="6" rows="5" height="59" placeholder="Principal's Remarks"></textarea> -->
+=======
+        <!-- <textarea on:input={checkCommentNotEmpty} bind:value={pComment} name="pComment" id="pComment" cols="6" rows="5" height="59" placeholder="Principal's Remarks"></textarea> -->
+>>>>>>> auth
       </div>
       <div class="btn-sec">
         <Button {...btnProps} on:click={addComments}>
