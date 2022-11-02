@@ -64,7 +64,7 @@
   
       <!-- error message -->
       {#if error}
-        <p style="color: var(--accent-danger);">{error}</p>
+        <p class="center-text" style="color: var(--accent-danger);">{error}</p>
       {/if}
 
       <form action="/login" method="post" on:submit|preventDefault={loginFrm}>

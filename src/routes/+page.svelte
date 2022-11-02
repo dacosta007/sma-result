@@ -1,45 +1,94 @@
 <script>
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
   import { ResultStore } from "$lib/stores/ResultStore"
+  import { AuthStore } from "$lib/stores/AuthStore"
+
+  import Login from "$lib/components/auth/Login.svelte"
+  import TileLink  from "$lib/components/auth/TileLink.svelte"
+
   export let data
+
 
   BranchInfoStore.set(data.branchInfo)
   ResultStore.set(data.resultData)
 
   let quickLinks = [
-    { title: 'student', subTitle: 'reg', href: "/student",  icon: 'ti-id-badge' },
-    { title: 'print', subTitle: 'slip', href: '/slip', icon: 'ti-file' },
-    { title: 'result', subTitle: 'compute', href: '/result', icon: 'ti-files' }
+    { title: 'student', subTitle: 'reg', href: "/student",  icon: 'lni-graduation' },
+    { title: 'teacher', subTitle: 'reg', href: "#teacher",  icon: 'lni-user' },
+    { title: 'print', subTitle: 'slip', href: '/slip', icon: 'lni-printer' },
+    { title: 'result', subTitle: 'compute', href: '/result', icon: 'lni-files' }
   ]
+
+  // toggle login form
+  let login = false, homePageHeader = true
+
+  function showLoginFrm() {
+    login = !login
+    homePageHeader = !homePageHeader
+  }
+
+  function showPage(evt) {
+    homePageHeader = true
+    login = evt.detail
+  }
 </script>
+
+<svelte:head>
+  <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
+</svelte:head>
 
 <main class="home-page">
   <section class="action-content">
-    <header class="sch-logo-sec">
-      <div class="sch-logo">
-        <img src="imgs/AFSSLogo.png" alt="AFSS school logo" width="130" height="auto">
+    {#if homePageHeader}
+      <header class="sch-logo-sec">
+        <div class="sch-logo">
+          <img src="imgs/AFSSLogo.png" alt="AFSS school logo" width="130" height="auto">
+        </div>
+
+        <h2>Result App</h2>
+      </header>
+    {/if}
+    
+    <section class="auth-cta-btn-sec">
+      {#if login === false}
+        {#if $AuthStore.isLoggedIn === false}
+          <a href="#login" on:click={showLoginFrm} class="auth-cta-btn">login</a> 
+          <a href="#signup" class="auth-cta-btn auth-cta-btn-2">signup</a>
+        {/if}
+      {/if}
+
+      <!-- Auth -->
+      <div class="auth-login">
+        {#if login}
+          <Login on:showAuth={showPage} />
+
+          <!-- go back home -->
+          <a href="#home" style="margin-top:1.5em; display:inline-block" on:click={showLoginFrm} class="auth-cta-btn auth-cta-btn-2">
+            go back home
+          </a>
+        {/if}
       </div>
 
-      <h2>Result App</h2>
-    </header>
-  
-    <section class="auth-cta-btn-sec">
-      <a href="/login" class="auth-cta-btn">login</a> 
-      <a href="/signup" class="auth-cta-btn auth-cta-btn-2">signup</a>
+      <!-- App Auth links -->
+      {#if $AuthStore.isLoggedIn === true}
+        <!-- links to pages -->
+        <article class="app-features-sec">
+          <section class="quick-nav">
+            {#each quickLinks as link}
+              <TileLink linkObj={link} />
+            {/each}
+          </section>
+
+          <!-- logout btn -->
+          <div class="logout-container">
+            <a href="#logout" on:click={() => { $AuthStore.isLoggedIn = false; login = false; }} class="auth-cta-btn">
+              logout
+            </a>
+          </div>
+        </article>
+      {/if}
     </section>
 
-    <!-- links to pages -->
-    <section class="quick-nav">
-      {#each quickLinks as link}
-        <a href="{link.href}" data-sveltekit-prefetch>
-          <i class="ti {link.icon}"></i>
-          <div>
-            <span>{link.subTitle}</span>
-            <span>{link.title}</span>
-          </div>
-        </a>
-      {/each}
-    </section>
   </section>
 
   <footer class="copyright-sec">
@@ -103,43 +152,13 @@
   }
   .quick-nav {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr;
     gap: 1em;
   }
-  .quick-nav a {
-    text-decoration: none;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    color: var(--clr-txt);
-    background-color: var(--clr-off-white);
-    border-radius: 13px;
-    padding: 0.4em 0.6em;
-    box-shadow: 0 4px 19px rgb(0 0 0 / 5%);
+  .logout-container {
+    margin-top: 3em;
   }
-  .quick-nav a i {
-    font-size: 20px;
-    padding: 6px;
-    border-radius: 50%;
-    background-color: rgb(36 40 64 / 12%);
-    color: #181f48;
-  }
-  .quick-nav a div {
-    display: grid;
-    line-height: 1;
-    gap: 2px;
-    padding-right: 6px;
-  }
-  .quick-nav a div span:nth-child(1) {
-    font-family: var(--font-quicksand);
-    font-variant: small-caps;
-    font-size: 14px;
-    color: var(--accent-info);
-    font-weight: bold;
-  }
-  .quick-nav a div span:nth-child(2) {
-    text-transform: capitalize;
-    font-size: 15px;
-    letter-spacing: 0.8px;
+  .logout-container a {
+    display: inline-block;
   }
 </style>

@@ -21,11 +21,12 @@
 
   function stats() {
     let obtained = reportData.reduce((acc, ele) => ele.totalMark + acc, 0)
-    let percentage = parseFloat(((obtained / obtainable) * 100).toFixed(2))
     let totalSubj = reportData.length
+    let obtainableMark = obtainable * totalSubj
+    let percentage = parseFloat(((obtained / obtainableMark) * 100).toFixed(2))
     let { grade, gradeClr } = gradeScore(percentage)
 
-    return { obtained, percentage, totalSubj, grade, gradeClr }
+    return { obtained, obtainableMark, percentage, totalSubj, grade, gradeClr }
   }
 
   function checkCommentNotEmpty(event) {
@@ -65,7 +66,7 @@
       <div class="stats-sec">
         <!-- obtainable, obtained, percentage, grade -->
         <div class="stat-info">
-          <span>obtainable</span> <span>{obtainable}</span>
+          <span>obtainable</span> <span>{stats().obtainableMark}</span>
         </div> 
         <div class="stat-info">
           <span>obtained</span> <span>{stats().obtained}</span>
