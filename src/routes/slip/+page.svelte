@@ -1,16 +1,12 @@
 <script>
   import { StudentStore } from "$lib/stores/StudentStore"
-  import { LocalStore } from "$lib/stores/LocalStore"
-  import { localData } from "./getLocalData"
   import Studt from "./Studt.svelte";
 
-  export async function loadData() {
-    const baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
-    const res = await fetch(`${baseUrl}/student`)
-    const resData = await res.json()
+  export let data
 
-    return resData
-  }
+  let { students } = data
+
+  StudentStore.set(students)
 
   function filterList(event) {
     if (event.target.value === '') return
@@ -18,21 +14,16 @@
     let category = (event.target.value).slice(0, 3)
     let level = (event.target.value).match(/\d/g).join('')
 
-    if (  category === '' & level === '') {
-      listStudt = $LocalStore
+    if (category === '' & level === '') {
+      listStudt = $StudentStore
       return
     }
 
-    listStudt = $LocalStore.filter(items => items.class.category === category && items.class.level === level)
-    console.log({category, level, listStudt})
+    listStudt = $StudentStore.filter(items => items.class.category === category && items.class.level === level)
   }
 
-  loadData().then(res => stdDB = res)
-  let dataRes
-  let stdDB  
-  let stdDataOnSys  = localData ? localData : loadData();
-  $LocalStore = JSON.parse(localStorage.students)
-  let listStudt = $LocalStore , totalStudt = $LocalStore
+  
+  let listStudt = $StudentStore , totalStudt = $StudentStore
 </script>
 
 <svelte:head>

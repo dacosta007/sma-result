@@ -2,10 +2,6 @@
   import { createEventDispatcher } from "svelte";
   import { gradeScore } from "$lib/components/utils/gradeScore";
   import { comments } from "$lib/components/utils/preDefinedComments"
-<<<<<<< HEAD
-=======
-
->>>>>>> auth
   import Button from "$lib/components/Button.svelte"
 
   export let addReptComment = false
@@ -90,31 +86,21 @@
     <div class="inpt-sec">
       <div class="input-field">
         <label for="tComment">teacher's comment</label>
-        <select name="tComment" id="tComment" on:change={checkCommentNotEmpty} bind:value={tComment}>
-          <option value="">Teacher's Remarks</option>
+        <select name="tComment" id="tComment" on:change={checkCommentNotEmpty} bind:value={tComment} style="text-transform: uppercase;">
+          <option value={tComment}>{tComment}</option>
           {#each comments.teacher as commt}
-            <option>{commt}</option>
+            <option style="text-transform: uppercase;" value={commt}>{commt}</option>
           {/each}
         </select>
-<<<<<<< HEAD
-        <!-- <textarea  name="tComment" id="tComment" cols="6" rows="5" height="59" placeholder="Teacher's Remarks"></textarea> -->
-=======
-        <!-- <textarea on:input={checkCommentNotEmpty} bind:value={tComment} name="tComment" id="tComment" cols="6" rows="5" height="59" placeholder="Teacher's Remarks"></textarea> -->
->>>>>>> auth
       </div>
       <div class="input-field">
         <label for="pComment">principal comment</label>
-        <select name="pComment" id="pComment" on:change={checkCommentNotEmpty} bind:value={pComment}>
-          <option value="">Principal's Remarks</option>
+        <select name="pComment" id="pComment" on:change={checkCommentNotEmpty} bind:value={pComment} style="text-transform: uppercase;">
+          <option value={pComment}>{pComment}</option>
           {#each comments.principal as commt}
-            <option>{commt}</option>
+            <option style="text-transform: uppercase;" value={commt}>{commt}</option>
           {/each}
         </select>
-<<<<<<< HEAD
-        <!-- <textarea  name="pComment" id="pComment" cols="6" rows="5" height="59" placeholder="Principal's Remarks"></textarea> -->
-=======
-        <!-- <textarea on:input={checkCommentNotEmpty} bind:value={pComment} name="pComment" id="pComment" cols="6" rows="5" height="59" placeholder="Principal's Remarks"></textarea> -->
->>>>>>> auth
       </div>
       <div class="btn-sec">
         <Button {...btnProps} on:click={addComments}>
@@ -168,10 +154,6 @@
   .rept-comment-container {
     padding: 0.5em;
   }
-  /* .inpt-sec textarea {
-    resize: none;
-    height: 59px;
-  } */
   .btn-sec {
     padding: 0 7em;
   }

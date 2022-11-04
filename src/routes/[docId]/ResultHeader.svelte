@@ -11,7 +11,7 @@
     <h4 class="sch-address">SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State</h4> 
     <h5 class="sch-contact">
       <div><span>email:</span> <span>info@afssibadan.com.ng</span></div> 
-      <div><span>tel:</span> <span>07034793449</span></div></h5>
+      <div><span>tel:</span> <span>08034110127</span></div></h5>
   </div>
 </header>
 
