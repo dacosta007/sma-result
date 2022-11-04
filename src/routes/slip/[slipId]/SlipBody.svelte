@@ -1,5 +1,5 @@
 <script>
-  import { localData } from "../getLocalData"
+  // import { localData } from "../getLocalData"
   export let std
   export let watermark = 'original'
 
