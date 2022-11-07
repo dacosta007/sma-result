@@ -406,7 +406,7 @@
                 <i  class="ti ti-user avatar-placeholder"></i>
               {/if}
               {#if std.passport != null}
-                <img src="#" alt="student_img">
+                <img src={std.passport} alt="student_img">
               {/if}
             </div>
           </div>
@@ -471,6 +471,16 @@
     align-items: center;
     justify-content: center;
     padding-top: 0.2em;
+    height: 70px;
+    border-radius: 50%;
+  }
+  .std-avatar .img img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
   }
   .std-avatar i {
     font-size: 28px;

@@ -1,16 +1,14 @@
 <script>
-  // import { localData } from "../getLocalData"
+  import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
+
   export let std
   export let watermark = 'original'
 
   let { name, gender, studtId, slipId, passport, class:stdCls } = std
   let { schoolingType, admissionYear, regDate } = std
 
-  if( passport === null ) {
-    let localFile = localData.find(ele => ele.studtId === studtId & ele.passport != null)
-    
-    passport = (localFile != undefined ) ? URL.createObjectURL(localFile) : null;
-  }
+  let { academicYear } = $BranchInfoStore 
+  let { session, currentTerm } = academicYear
 
   function printSlip() {
     window.print()
@@ -35,7 +33,7 @@
       <div class="img-sec">
         <div class="img">
           {#if passport }
-            <img src="{passport}" alt="std_img" width="100" height="auto">
+            <img src={passport} alt="std_img" width="100" height="auto">
           {/if}
         </div>
         <div class="gender-sec">{gender}</div>
@@ -46,7 +44,7 @@
         <div class="name-sec">
           <div class="info-data">
             <h5 class="info-title">first name</h5>
-            <div class="info">{name.first} {name.last}</div>
+            <div class="info">{name.first}</div>
           </div>
           <div class="info-data">
             <h5 class="info-title">last name</h5>
@@ -58,7 +56,7 @@
         <div class="pre-reg-date">
           <div class="info-data">
             <h5 class="info-title">pre-reg id</h5>
-            <div class="info">{studtId}.{slipId}</div>
+            <div class="info">{slipId}</div>
           </div>
           <div class="info-data">
             <h5 class="info-title">date</h5>
@@ -84,7 +82,7 @@
           </div>
           <div class="info-data">
             <h5 class="info-title">admission</h5>
-            <div class="info">{admissionYear}</div>
+            <div class="info">{admissionYear ?? null}</div>
           </div>
         </div>
       </div>
@@ -99,17 +97,17 @@
       <!-- slip ID -->
       <div class="info-data">
         <h5 class="info-title">slip code</h5>
-        <div class="info">{slipId}</div>
+        <div class="info">{slipId ?? null}</div>
       </div>
       <!-- session -->
       <div class="info-data">
         <h5 class="info-title">session</h5>
-        <div class="info">2022/2023</div>
+        <div class="info">{session}</div>
       </div>
       <!-- term -->
       <div class="info-data">
         <h5 class="info-title">term</h5>
-        <div class="info">first</div>
+        <div class="info">{currentTerm}</div>
       </div>
     </div>
   </div>
@@ -119,10 +117,9 @@
         <h5 class="title">note:</h5>
         <p>
           you can print or save this receipt as prove of successful completion. it can be 
-          reprinted in the school's student portal of you child or ward(Currently in development).
+          reprinted in the school's student portal of you child or ward(currently in development). 
           The <b>student ID</b>, and <b>slip ID</b> will be required to make full successful 
-          completion of your child or ward on the portal(when ready), 
-          Please keep safely(attract some fee for re-printing).
+          completion of your child or ward on the portal(when ready), Please keep safely.
         </p>
       </div>
       <!-- print button -->
@@ -175,6 +172,7 @@
     height: 100%;
     margin-bottom: 0.3em;
     border-radius: 3px;
+    border: 2px dashed var(--clr-off-white);
   }
   .img img {
     position: absolute;
@@ -209,8 +207,8 @@
   }
   .pre-reg-date {
     display: grid;
-    grid-template-columns: auto auto;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     margin-bottom: 0.3em;
   }
   .cls-dpt-sec {

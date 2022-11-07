@@ -18,6 +18,10 @@
     showdopdown = false
   }
 
+  function closeUpdtWin(evt) {
+    showUpdate = evt.detail
+  } 
+
   async function delStudt(event) {
     let std = event.target.dataset.stdId
     let delAgr = confirm(`🚨 Are you sure you want to delete ${info.name.first} ${info.name.last}`)
@@ -41,23 +45,27 @@
         alert('🚧 Unable to delele student please try again later')
         return
       }
-      console.log(res.success)
-      // aler(`${info.name.first} ${info.name.last} is deleted successfully!`, std)
+
+      // console.log(res.success)
+      alert(`${info.name.first} ${info.name.last} is deleted successfully!`, std)
       StudentStore.update(items => {
-        return items.filter(item => item.studtId != std)
+        let filteredItems = items.filter(ele => ele.studtId != info.studtId)
+        return filteredItems
       })
       showdopdown = !showdopdown
     } catch (err) {
+      alert('Please upload an image')
       console.error(err)
     }
   }
 
   // get passport from local sys
-  let stdImg = $StudentStore.find((ele => ele.studtId === info.studtId && ele.passport != null))
-  info.passport = stdImg ?? null;
+  // let stdImg = $StudentStore.find((ele => ele.studtId === info.studtId && ele.passport != null))
+  // console.log(stdImg)
+  // info.passport = stdImg ?? null;
 </script>
 
-<UpdateStudt {showUpdate} {info} />
+<UpdateStudt {showUpdate} {info} on:closeUpdtWin={closeUpdtWin} />
 
 <div class="show-info-sec" transition:fade={{delay: 1, duration: 10}}>
   <div class="std-info">
@@ -67,7 +75,7 @@
           <i  class="ti ti-user avatar-placeholder"></i>
         {/if}
         {#if info.passport != null}
-          <img src="{info.passport}" alt="student_img">
+          <img src={info.passport} alt="student_img">
         {/if}
       </div>
     </div>
@@ -124,6 +132,16 @@
     align-items: center;
     justify-content: center;
     padding-top: 0.2em;
+    height: 70px;
+    border-radius: 50%;
+  }
+  .img img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
   .std-avatar i {
     font-size: 28px;

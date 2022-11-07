@@ -1,10 +1,13 @@
 <script>
+  import { createEventDispatcher } from "svelte"
   import { StudentStore } from "$lib/stores/StudentStore"
   import Button from "$lib/components/Button.svelte";
   import Card from "$lib/components/Card.svelte";
 
   export let showUpdate = false
   export let info = {}
+
+  let dispatch = createEventDispatcher()
 
   let btnProps = {
     btnType: 'submit',
@@ -13,6 +16,10 @@
     disableBtn: false,
     showLoading: false,
     loadingStatus: 'Please wait...'
+  }
+
+  function closeUpdtModal() {
+    dispatch('closeUpdtWin', false)
   }
 
   let uploadImg = false
@@ -33,8 +40,8 @@
   }
 
   async function updateStudt(event) {
-    let frm = event.target
-    // btnProps.showLoading = true
+    // let frm = event.target
+    btnProps.showLoading = true
     // console.log(fileImg[0])
 
     try {
@@ -50,16 +57,18 @@
         btnProps.showLoading = false
         return
       }
-      console.log(updtRes.branchStudts)
-      btnProps.showLoading = false
-      
-      StudentStore.set(updtRes.branchStudts)
+
+      if (updtRes.success) {
+        StudentStore.set(updtRes.branchStudts)
+        // console.log($StudentStore)
+        alert('Updated successfully! 😀')
+        btnProps.showLoading = false
+        closeUpdtModal()
+      }
     } catch (err) {
       console.error(err)
       btnProps.showLoading = false
     }
-
-
   }
 </script>
 
@@ -68,7 +77,7 @@
     <Card>
       <header class="center-text updt-header">
         <!-- close update window -->
-        <i class="ti ti-close close-icon" on:click={() => showUpdate = false} on:keypress={() => showUpdate = false}></i>
+        <i class="ti ti-close close-icon" on:click={closeUpdtModal} on:keypress={closeUpdtModal}></i>
 
         <div class="img-container">
           <div class="img">
