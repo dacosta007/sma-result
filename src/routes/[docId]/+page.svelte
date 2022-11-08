@@ -1,5 +1,4 @@
 <script>
-  import { ResultStore } from "$lib/stores/ResultStore"
   import ResultSlip from "./ResultSlip.svelte";
   import ResultNotice from "./ResultNotice.svelte";
 
@@ -13,8 +12,8 @@
 </svelte:head>
 
 <article>
-  <ResultNotice reports={data.res.branch002} docId={data.docId} />
-  <!-- <ResultSlip reportData={data.res} docId={data.docId} /> -->
+  <!-- <ResultNotice reports={data.res.branch002} docId={data.docId} /> -->
+  <ResultSlip reportData={data.res} docId={data.docId} />
 </article>
 
 <style>
