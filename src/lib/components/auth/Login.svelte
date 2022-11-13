@@ -36,7 +36,7 @@
       error = 'Invalid Username or password!'
       return
     }
-    if (frm.password.value != 'afssibADMIN_002') {
+    if (frm.password.value != 'afssib_002_admin') {
       error = 'Invalid User'
       return
     }
