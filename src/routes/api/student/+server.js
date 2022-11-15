@@ -15,7 +15,7 @@ export async function GET() {
       studts
     }))
   } catch (err) {
-    console.log(`Error:=> ${err}`)
+    console.log(`Error Student API: ${err}`)
     return new Response(
       JSON.stringify({ error: 'Server error, please try again in a little while' }),
       { status: 500 }

@@ -34,6 +34,7 @@
 </script>
 
 <svelte:head>
+  <title>AFSS Ibadan Result App</title>
   <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
 </svelte:head>
 

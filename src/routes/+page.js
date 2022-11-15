@@ -1,19 +1,26 @@
 
 export async function load({ fetch }) {
-  let baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
+  try {
+    let baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
+    
+    let results = await fetch('/api/result', {
+      mode: 'cors'
+    })
+    let resultData = await results.json()
+    resultData = resultData.branch002
+    
+    let res = await fetch(`${baseUrl}/schBranch`)
+    let resData = await res.json()
+    resData = resData.branch002
+    
+    // console.log({ resData, resultData })
   
-  let results = await fetch('/api/result')
-  let resultData = await results.json()
-  resultData = resultData.branch002
-  
-  let res = await fetch(`${baseUrl}/schBranch`)
-  let resData = await res.json()
-  resData = resData.branch002
-  
-  // console.log({ resData, resultData })
-
-  return {
-    branchInfo: resData,
-    resultData
+    return {
+      branchInfo: resData,
+      resultData
+    }
+  } catch (err) {
+    console.log(`Error Home page: ${err}`)
+    return {}
   }
 }

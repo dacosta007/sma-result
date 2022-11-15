@@ -1,11 +1,21 @@
 
-export async function GET({ fetch }) {
-  let res = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result')
-  let resData = await res.json()
-
-  resData = JSON.stringify(resData)
-
-  return new Response(resData)
+export async function GET() {
+  try {
+    let res = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result', {
+      mode: "cors"
+    })
+    let resData = await res.json()
+  
+    resData = JSON.stringify(resData)
+  
+    return new Response(resData)
+  } catch (err) {
+    console.log(`Error Result API: ${err}`)
+    return new Response(
+      JSON.stringify({ error: 'Server error, please try again in a little while' }),
+      { status: 500 }
+    )
+  }
 };
 
 export async function POST({ request, fetch }) {
