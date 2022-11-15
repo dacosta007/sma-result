@@ -1,16 +1,26 @@
 // import { IMAGE_KIT_PUB } from '$env/static/private'
-import 'dotenv/config'
+// import 'dotenv/config'
 
 let baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
 
 export async function GET() {
-  let res = await fetch(`${baseUrl}/student`)
-  let studts = await res.json()
-  studts = studts.branch002
-
-  return new Response(JSON.stringify({
-    studts
-  }))
+  try {
+    let res = await fetch(`${baseUrl}/student`, {
+      mode: "cors"
+    })
+    let studts = await res.json()
+    studts = studts.branch002
+  
+    return new Response(JSON.stringify({
+      studts
+    }))
+  } catch (err) {
+    console.log(`Error:=> ${err}`)
+    return new Response(
+      JSON.stringify({ error: 'Server error, please try again in a little while' }),
+      { status: 500 }
+    )
+  }
 }
 
 
