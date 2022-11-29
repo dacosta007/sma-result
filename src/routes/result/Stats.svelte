@@ -15,7 +15,7 @@
     sec: true
   }
 
-  let totalStudts = studts.length
+  let totalStudts = studts.length - 1
   let reptComptd
 
   if ($ResultStore === undefined) {
@@ -23,10 +23,18 @@
     btnProps.disableBtn = true
   }
   if ($ResultStore.length > 0) {
-    reptComptd = $ResultStore.length
+    reptComptd = $ResultStore.length - 1
   }
 
   $:reptRemain = totalStudts - reptComptd
+
+  // students without reports
+  function getStudtWithoutRept() {
+    let allIds = $ResultStore.map(ele => ele.meta.studtId)
+    let res = studts.filter(ele => allIds.includes(ele.studtId) === false)
+    // console.log(res)
+  }
+  // getStudtWithoutRept()
 </script>
 
 <section>

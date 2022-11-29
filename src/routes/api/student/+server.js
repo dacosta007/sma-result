@@ -1,19 +1,15 @@
 // import { IMAGE_KIT_PUB } from '$env/static/private'
 // import 'dotenv/config'
-
-let baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
+import { students } from "$db/collections/students"
+import { results } from "$db/collections/results"
+import { invalid, json } from "@sveltejs/kit"
 
 export async function GET() {
   try {
-    let res = await fetch(`${baseUrl}/student`, {
-      mode: "cors"
-    })
-    let studts = await res.json()
-    studts = studts.branch002
-  
-    return new Response(JSON.stringify({
-      studts
-    }))
+    let queryOpt = { projection: { _id: 0 } }
+    let studts = await students.find({}, queryOpt).toArray()
+    
+    return new Response(JSON.stringify({ studts }), { status: 200 })
   } catch (err) {
     console.log(`Error Student API: ${err}`)
     return new Response(
@@ -26,27 +22,24 @@ export async function GET() {
 
 export async function POST({ request }) {
   let regFrm = await request.json()
-  const students = await fetch(`${baseUrl}/student`)
-
+  
   // let saveImgSecret = process.env.IMAGE_KIT_PUB
   // console.log(saveImgSecret)
+  
   // save data into database
-  students['branch002'].push(regFrm)
-
   try {
-    let saveStudt = await fetch(`${baseUrl}/student`, {
-      method: 'post',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(students)
-    })
+    const saveData = await students.insertOne(regFrm)
 
-    let saveRes = await saveStudt.text()
+    if (saveData.acknowledge != true && !saveData.insertedId) {
+      throw invalid(500, JSON.stringify({ error: true, message: "Unabble save student's data, please try again" }))
+    }
+
     return new Response(JSON.stringify(
       {
         status: 201,
         success: 'success',
-        content: students['branch002'],
-        res: saveRes
+        content: saveData,
+        // res: saveRes
       }
     ))    
   } catch (err) {
@@ -58,72 +51,42 @@ export async function POST({ request }) {
 export async function PUT({ request }) {
   let studt = await request.json()
 
-  let students = await fetch(`${baseUrl}/student`)
-  let results = await fetch(`${baseUrl}/result`)
-  
-  let studentsRes = await students.json()
-  let resultsRes = await results.json()
-
-  // update the student, as well as the result(if found) database with new name
-  let stdIndx = studentsRes.branch002.findIndex(ele => ele.studtId === studt.studtId)
-  studentsRes.branch002[stdIndx] = studt
-  let resIndx = resultsRes.branch002.findIndex(ele => ele.meta.studtId === studt.studtId)
-  if (resIndx != -1) {
-    resultsRes.branch002[resIndx].meta.name = studt.name
-    console.log(`Student Result Index: ${resIndx}`)
-  }
-
-  let branch = studentsRes.branch002
-
+  // update required student's credentials in 'students db' & in 'results db'
   try {
-    let saveStudents = await fetch(`${baseUrl}/student`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(studentsRes)
-    })
+    // for students db
+    let query = { studtId: studt.studtId }
+    let queryOpt = { $set: { name: studt.name, schoolingType: studt.schoolingType } }
+    let res = await students.updateOne(query, queryOpt)
 
-    if (saveStudents.ok) {
-      let saveResults = await fetch(`${baseUrl}/result`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(resultsRes)
-      })
-      let resResp = await saveResults.text()
-      console.log(resResp)
-      return new Response(
-        JSON.stringify({success: "success", branchStudts: branch}), 
-        { status: 201 }
-      )
+    // for results db
+    // for result db, you can only change the student's name
+    if (res.acknowledge != true && res.modifiedCount != 1) {
+      return new Response(json({ error: "Unable to update Result" }), { status: 500 })
     }
-    return new Response(
-      JSON.stringify({error: 'Unable to process data, please try again in a little while'}), 
-      { status: 500 }
-    )
+
+    let reptQuery = { 'meta.studtId': studt.studtId }
+    let reptQueryOpt = { $set: { name: studt.name } }
+    let rept = await results.updateOne(reptQuery, reptQueryOpt)
+    
+    return new Response(JSON.stringify({ success: true, rept }))
   } catch (err) {
     console.log(err)
+    return new Response(JSON.stringify({ error: "Something went wrong" }), { status: 500 }) 
   }
 }
 
 
 export async function DELETE({ request }) {
   const { studtId } = await request.json()
-  let res = await fetch(`${baseUrl}/student`)
-  let students = await res.json()
 
-  // filter out student with the student ID and save the rest of the data
-  let branch = students.branch002
-  let filterStds = branch.filter(ele => ele.studtId != studtId)
-  students.branch002 = filterStds
-  // return new Response(JSON.stringify({totalStds: branch.length, afterDel: filterStds.length}))
   try {
-    let saveData = await fetch(`${baseUrl}/student`, {
-      method: 'POST',
-      headers: { "Content-Type": 'application/json' },
-      body: JSON.stringify(students)
-    })
-    let saveRes = await saveData.text()
-    return new Response(JSON.stringify({success: 'success', message: saveRes}), { status: 200 })
+    // delete student with
+    let query = { studtId: studtId }
+    let res = await students.deleteOne(query)
+
+    return new Response(JSON.stringify({success: 'success', message: res}), { status: 200 })
   } catch (err) {
     console.log(err)
+    throw invalid(500, { error: true, message: 'Server error, please try again later!' })
   }
 }

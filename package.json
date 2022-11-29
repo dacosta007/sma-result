@@ -17,6 +17,7 @@
 	"dependencies": {
 		"dotenv": "^16.0.3",
 		"env-cmd": "^10.1.0",
-		"imagekit-javascript": "^1.5.4"
+		"imagekit-javascript": "^1.5.4",
+		"mongodb": "^4.12.1"
 	}
 }

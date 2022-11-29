@@ -14,7 +14,7 @@
   <div class="slip">
     <ResultHeader />
     
-    <ResultBody report={reportData.branch002} docId={docId} />
+    <ResultBody report={reportData} docId={docId} />
   </div>
 </section>
 

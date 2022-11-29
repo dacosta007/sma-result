@@ -52,15 +52,21 @@
       })
       let updtRes = await updt.json()
       
+      // success is not found in response
       if (!updtRes.success) {
         alert('Update unsuccessful, please try again in a little while')
         btnProps.showLoading = false
         return
       }
-
+      
       if (updtRes.success) {
-        StudentStore.set(updtRes.branchStudts)
-        // console.log($StudentStore)
+        StudentStore.update(items => {
+          let indx = items.findIndex(std => std.studtId === info.studtId)
+          items[indx] = info
+          return items
+        })
+
+        console.log(`${info.name.first} ${info.name.last}: ${$StudentStore.some(ele => ele.studtId === info.studtId)}`)
         alert('Updated successfully! 😀')
         btnProps.showLoading = false
         closeUpdtModal()

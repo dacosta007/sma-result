@@ -1,63 +1,70 @@
+import { results } from "$db/collections/results"
+import { invalid } from "@sveltejs/kit"
 
-export async function GET() {
+
+export async function POST({ request }) {
+  let resultData = await request.json()
+
   try {
-    let res = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result', {
-      mode: "cors"
-    })
-    let resData = await res.json()
-  
-    resData = JSON.stringify(resData)
-  
-    return new Response(resData)
-  } catch (err) {
-    console.log(`Error Result API: ${err}`)
-    return new Response(
-      JSON.stringify({ error: 'Server error, please try again in a little while' }),
-      { status: 500 }
-    )
-  }
-};
+    let saveRept = await results.insertOne(resultData)
 
-export async function POST({ request, fetch }) {
+    if (saveRept.acknowledge != true &&  !saveRept.insertedId) {
+      return new Response(
+        JSON.stringify({ error: true, message: 'Something went wrong, please try again later' }), 
+        { status: 400 }
+      )
+    }
+
+    let res = JSON.stringify({ success: 'success', saveRept })
+
+    return new Response(res, { status: 201 })
+  } catch (err) {
+    console.log(err)
+    throw invalid(500, {
+      error: true,
+      message: 'Server Error, unable to save report!. Please try again in a little while'
+    })
+  }
+}
+
+export async function PUT({ request }) {
   let resultData = await request.json()
   console.log(resultData)
-  let res = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result')
-  let resData = await res.json()
-
-  let results = resData
-  if (results.branch002 === undefined) {
-    results = {}
-    results.branch002 = []
-    results.branch002.push(resultData)
-  }
-
-  if (results.branch002 != undefined) {
-    let stdIndx = (results.branch002).findIndex(ele => ele.meta.studtId === resultData.meta.studtId)
-    if (stdIndx === -1) { 
-      // console.log(`stdIndx: can't be found`)
-      results.branch002.push(resultData)
-     } else {
-      //  console.log(`stdIndx: ${stdIndx}`)
-       results.branch002[stdIndx] = resultData
-     }
-  }
-
   try {
-    let saveData = await fetch('https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket/result', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(results)
-    })
-    let saveRes = await saveData.text()
-    console.log(saveRes)
-    resData = resData.branch002
-    return new Response(
-      JSON.stringify({
-        success: 'success',
-        res: resData
-      })
-    )
+    // database query options
+    let query = { "meta.studtId": resultData.meta.studtId, "meta.session": resultData.meta.session }
+    let uptdOpts = { $set: {} }
+
+    // report type can be 'midTerm' or 'exam' (this should be set dynamically, i.e: from submitted form)
+    let reportType = 'midTerm', term = 'first'
+
+    if (reportType === 'midTerm') {
+      uptdOpts.$set[`${reportType}.report.${term}`] = resultData.midTerm.report[term] 
+      uptdOpts.$set[`${reportType}.comments.${term}`] = resultData.midTerm.comments[term]
+      uptdOpts.$set[`cummulative.midTerm.${term}`] = resultData.cummulative.midTerm[term]
+    }
+    if (reportType === 'exam') {
+      uptdOpts.$set[`${reportType}.report.${term}`] = resultData.exam.report[term]
+      uptdOpts.$set[`${reportType}.comments.${term}`] = resultData.exam.comments[term]
+      uptdOpts.$set[`cummulative.exam.${term}`] = resultData.cummulative.exam[term]
+    }
+    // console.log(uptdOpts)
+
+    // update report
+    let updtRept = await results.updateOne(query, uptdOpts)
+    
+    // unabel to update report
+    if (updtRept.acknowledge != true && updtRept.modifiedCount != 1) {
+      return new Response({ error: true, message: 'Something went wrong, please try again later' }, { status: 400 })
+    }
+    // console.log(updtRept)
+
+    return new Response(JSON.stringify({ success: 'success', updtRept }), { status: 201 })
   } catch (err) {
-    console.log(err)    
+    console.log(`Form Action error 'AddReport': ${err}`)
+    throw invalid(500, {
+      error: true,
+      message: 'Server Error, unable to save report!'
+    })
   }
 }

@@ -76,11 +76,15 @@
 
     // help remove duplicate
     if (currentAddedSubj.some(ele => ele.subj === frmData.subj)) {
-      console.log(`${frmData.subj} is all ready added`)
+      alert(`${frmData.subj} is all ready added`)
+      // clear all form fields
+      frm.reset()
       return
     }
     
     currentAddedSubj = [frmData, ...currentAddedSubj]
+    // clear form fields
+    frm.reset()
   }
 
   // help remove added subj
@@ -91,10 +95,6 @@
 
   // help close the modal window and clear compute records
   function closeComputeModal(evt) {
-    // let question = 
-    // console.log(alert('Are you sure you want to close window?'))
-    // if (question != true) return
-    
     // reset the compute form record & close modal window
     currentAddedSubj = []
 
@@ -120,7 +120,7 @@
         name: stdDetail.name,
         studtId: stdDetail.studtId,
         class: stdDetail.class,
-        createdAt: new Date().toLocaleDateString()
+        // createdAt: new Date().toLocaleDateString()
       },
       midTerm: {
         report: {
@@ -142,73 +142,88 @@
       }
     }
 
-    // check if record is previously found in the ResultStore(gotten from DB)
-    if ($ResultStore != undefined) {
+    // check if record is previously found in the ResultStore(gotten from DB), then updated record
+    let reptIndx = $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
+    if (reptIndx != -1 && $ResultStore != undefined) {
       saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
       saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
       saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
       saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
 
       fetch('/api/result', {
-        method: 'post',
+        method: 'PUT',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(saveFrmt)
       })
         .then(res => res.json())
         .then(res => {
+          // console.log(res)
+
+          // error on update
+          if (res.error) {
+            alert(`${error.message} 🚨`)
+            return
+          }
+
+          // update result store
           ResultStore.update((items) => {
-            return items = res.res
+            // if result already found in DB(update its index by studtId)
+            let indx = $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
+            // console.log(`stdIndx: ${indx}`)
+            items[indx] = saveFrmt
+            return items
           })
-          console.log(res)
-          console.log($ResultStore)
+
           // close compute modal & clear currentAddedSubj
           currentAddedSubj = []
           showModal = false
-          console.log('modal window closed!')
-          alert('report is successfully added to Database 😀')
+          // console.log('modal window closed!')
+          alert('Report is successfully updated 😀')
         })
         .catch(err => console.log(err))
       return
     }
 
+    saveFrmt.meta.createdAt = new Date().toLocaleDateString()
     saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
     saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
     saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
     saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
     
-    // add report to store
-    ResultStore.update((items) => {
-      if (items === undefined) {
-        return items = [saveFrmt]
-      }
-
-      // if result already found in DB(update its index by studtId)
-      let indx = $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
-      console.log(`stdIndx: ${indx}`)
-      items[indx] = saveFrmt
-      return items
-    })
 
     // save to database
     fetch('/api/result', {
-      method: 'post',
+      method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(saveFrmt)
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res)
-        console.log(`Previously Adde to DB: ${$ResultStore.length}`)
-        console.log($ResultStore.set(res))
-        console.log(`Total added to DB: ${$ResultStore.length}`)
+        // console.log(res)
 
+        if (res.error) {
+          alert(`${error.message} 🚨`)
+          return
+        }
+        
+        // add report to store
+        // console.log(`ResultStore before record is added: ${$ResultStore.length}`)
+        ResultStore.update((items) => {
+          if (items === undefined) {
+            items = [saveFrmt]
+            return items
+          }
+          items = [...items, saveFrmt]
+          return items
+        })
+        // console.log(`ResultStore after record is added: ${$ResultStore.length}`)
         // link to preview student's result
         disableLink = false
         // close compute modal & clear currentAddedSubj
         currentAddedSubj = []
         showModal = false
 
-        alert('report is successfully added to Database 😀')
+        alert('Report is successfully added into Database 😀')
       })
       .catch(err => console.error(err))
     return
@@ -256,7 +271,6 @@
       return
     }
 
-    console.log(currentAddedSubj)
     // show current clicked student
     stdDetail = std
     showModal = true

@@ -7,8 +7,8 @@
   
   // console.log(report)
   // console.log($ResultStore)
-  
-  report = report.find(ele => ele.meta.studtId === docId)
+  console.log(docId)
+  // report = report.find(ele => ele.meta.studtId === docId)
 
   let { meta, midTerm, cummulative } = report
   

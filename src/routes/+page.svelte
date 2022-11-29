@@ -8,7 +8,6 @@
 
   export let data
 
-
   BranchInfoStore.set(data.branchInfo)
   ResultStore.set(data.resultData)
 

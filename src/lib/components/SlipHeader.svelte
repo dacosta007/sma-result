@@ -4,7 +4,8 @@
   export let slipTitle
 
   let { contact } = $BranchInfoStore
-  let { phone, email, schAddress } = contact
+  // let { schAddress } = contact
+  console.log($BranchInfoStore, contact)
 </script>
 
 <header class="slip-header center-text">
@@ -13,10 +14,10 @@
   </div>
   <div class="sch-info-container">
     <h2 class="sch-name">Apostolic Faith Secondary School</h2>
-    <h4 class="sch-address">{schAddress ?? "SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State"}</h4>
+    <h4 class="sch-address">{contact.schAddress ?? "SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State"}</h4>
     <h5 class="sch-contact">
-      <div><span>email:</span> <span>{email[0]}</span></div>
-      <div><span>tel:</span> <span>{phone[0]}</span></div>
+      <div><span>email:</span> <span>{contact.email[0]}</span></div>
+      <div><span>tel:</span> <span>{contact.phone[0]}</span></div>
     </h5>
   </div>
 </header>

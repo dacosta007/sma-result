@@ -24,6 +24,9 @@
   .tile-link:hover {
     background-color: #dce1ec;
   }
+  .tile-link:active {
+    animation: clickBtn 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
   .icon {
     text-decoration: none;
     font-size: 28px;

@@ -1,12 +1,11 @@
 <script>
-  import { ResultStore } from "$lib/stores/ResultStore"
   import { LocalStore } from "$lib/stores/LocalStore"
   import ListStudt from "./ListStudt.svelte";
   import Stats from "./Stats.svelte";
 
   export let data
-  
-  LocalStore.set(data.studts.studts)
+
+  LocalStore.set(data.studts)
 
   </script>
 
@@ -22,11 +21,11 @@
 
   <section class="result-container">
     <section class="studts-sec">
-      <ListStudt allStudts={data.studts.studts} resultPref={data.resultPref} subjects={data.subjs.branch002} />
+      <ListStudt allStudts={data.studts} resultPref={data.resultPref} subjects={data.subjs.subjects} />
     </section>
   
     <section class="overall-stat-sec">
-      <Stats studts={data.studts.studts} />
+      <Stats studts={data.studts} />
     </section>
   </section>
 
