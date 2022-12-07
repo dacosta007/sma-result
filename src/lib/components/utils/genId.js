@@ -34,7 +34,7 @@ export function genRandStr(numOfStr=5, strOptObj) {
 
   // generate random strings
   for (let i = 0; i < numOfStr; i++) {
-    rand = Math.round(Math.random() * str.length);
+    rand = Math.round(Math.random() * (str.length - 1));
     randStr += str.charAt(rand);
   }
 
@@ -73,3 +73,26 @@ export async function genStudtId(frmData) {
 
   return { studtId };
 };
+
+export function genTeachId(branchCode) {
+  // teacher ID = year(last two digits) + sch branch code + T + four Random num
+  // i.e student ID = 22002T1321
+
+  // get all the teachers ids from teachers DB
+
+  // create the ID format strings
+  let yr = (new Date().getFullYear()).toString().slice(2)
+  let initStr = `${yr}${branchCode}T`
+
+  // generate 5 random ids 
+  let arrOfIds = []
+  for (let i = 0; i < 10; i++) {
+    let randNum = genRandStr(4, { number: "number" })
+    let teachId = `${initStr}${randNum}`
+    arrOfIds.push(teachId)
+  }
+
+  let teachId = arrOfIds[Math.round(Math.random() * (arrOfIds.length - 1))]
+
+  return teachId
+}

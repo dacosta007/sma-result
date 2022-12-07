@@ -13,7 +13,7 @@
 
   let quickLinks = [
     { title: 'student', subTitle: 'reg', href: "/student",  icon: 'lni-graduation' },
-    { title: 'teacher', subTitle: 'reg', href: "#teacher",  icon: 'lni-user' },
+    { title: 'teacher', subTitle: 'reg', href: "/teacher",  icon: 'lni-user' },
     { title: 'print', subTitle: 'slip', href: '/slip', icon: 'lni-printer' },
     { title: 'result', subTitle: 'compute', href: '/result', icon: 'lni-files' }
   ]
