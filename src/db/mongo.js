@@ -11,4 +11,4 @@ export function startDB() {
   return client.connect()
 }
 
-export let db = client.db('sch')
+export let db = client.db('sch') 

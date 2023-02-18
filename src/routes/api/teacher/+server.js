@@ -12,7 +12,7 @@ export async function POST({ request }) {
 
   let teachId = genTeachId(frm.branchCode)
   frm.teachId = teachId
-  console.log(frm)
+  // console.log(frm)
   
   // return new Response(JSON.stringify({ success: true, data: frm }), { status: 201 })
 

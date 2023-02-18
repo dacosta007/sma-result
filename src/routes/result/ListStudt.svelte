@@ -108,12 +108,14 @@
       return
     }
 
+    // calculate added subjects cummulative scores
     let obtainable = parseInt(currentAddedSubj.length) * parseInt(resultPref.midTerm.obtainable)
     let obtained = currentAddedSubj.reduce((acc, ele) => ele.totalMark + acc, 0)
     let percentage = parseFloat(((obtained / obtainable) * 100).toFixed(2))
     let totalSubj = currentAddedSubj.length
     let cummulative = {obtainable, obtained, percentage, totalSubj}
 
+    // date structure format for report data in DB
     let saveFrmt = {
       meta: {
         session: academicYear.session,
@@ -145,11 +147,18 @@
     // check if record is previously found in the ResultStore(gotten from DB), then updated record
     let reptIndx = $ResultStore.findIndex(ele => ele.meta.studtId === stdDetail.studtId)
     if (reptIndx != -1 && $ResultStore != undefined) {
-      saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
-      saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
-      saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
-      saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
+      // get previous student's report already in DB
+      saveFrmt = $ResultStore.find(ele => ele.meta.studtId === stdDetail.studtId)
 
+      // update neccessary report data properties
+      saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
+      saveFrmt.midTerm.comments[academicYear.currentTerm] = {}
+      saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment ?? ""
+      saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment ?? ""
+      saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
+      // console.log(saveFrmt)
+
+      
       fetch('/api/result', {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
@@ -157,8 +166,6 @@
       })
         .then(res => res.json())
         .then(res => {
-          // console.log(res)
-
           // error on update
           if (res.error) {
             alert(`${error.message} 🚨`)
@@ -177,13 +184,16 @@
           // close compute modal & clear currentAddedSubj
           currentAddedSubj = []
           showModal = false
+
           // console.log('modal window closed!')
           alert('Report is successfully updated 😀')
         })
         .catch(err => console.log(err))
+     
       return
     }
 
+    /* for newly created report, for a term in a new session */
     saveFrmt.meta.createdAt = new Date().toLocaleDateString()
     saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
     saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
@@ -250,21 +260,25 @@
     let stdId = event.target.dataset.stdId
     let std = allStudts.find(s => s.studtId === stdId)
 
+    // if already added student's report into ResultStore(holds all/current added report in DB)
     if ($ResultStore != undefined) {
       let getRept = $ResultStore.find(ele => ele.meta.studtId === stdId)
+      // if record are empty
       if ( getRept === undefined ) {
+        console.log('report empty!. Returned empty report', getRept)
         getRept = currentAddedSubj
         stdDetail = std
         showModal = true
         return
       }
       // set teacher's and principal's comments if available
-      tComment = getRept.midTerm.comments[academicYear.currentTerm].teacher
-      pComment = getRept.midTerm.comments[academicYear.currentTerm].principal
+      tComment = getRept.midTerm.comments[academicYear.currentTerm]?.teacher
+      pComment = getRept.midTerm.comments[academicYear.currentTerm]?.principal
 
-      let records = getRept.midTerm.report[academicYear.currentTerm]
-      
+      // if for a new "term" within the session(returns and empty array)
+      let records = getRept.midTerm.report[academicYear.currentTerm] ?? []
       currentAddedSubj = records
+
       // show current clicked student
       stdDetail = std
       showModal = true

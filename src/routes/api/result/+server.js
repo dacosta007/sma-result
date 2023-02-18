@@ -29,14 +29,14 @@ export async function POST({ request }) {
 
 export async function PUT({ request }) {
   let resultData = await request.json()
-  console.log(resultData)
+  
   try {
     // database query options
     let query = { "meta.studtId": resultData.meta.studtId, "meta.session": resultData.meta.session }
     let uptdOpts = { $set: {} }
 
     // report type can be 'midTerm' or 'exam' (this should be set dynamically, i.e: from submitted form)
-    let reportType = 'midTerm', term = 'first'
+    let reportType = 'midTerm', term = 'second'
 
     if (reportType === 'midTerm') {
       uptdOpts.$set[`${reportType}.report.${term}`] = resultData.midTerm.report[term] 
