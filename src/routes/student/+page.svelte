@@ -109,7 +109,7 @@
           // show success message & reset the form
           alert('Student saved success fully! 😀')
 
-          // reset form fiels
+          // reset form fields
           passport = ''
           frmEle.reset()
 
@@ -119,7 +119,7 @@
         .catch(err => {
           console.error(err)
         })
-    }).catch(err => console.error(err.message))
+    }).catch(err => console.error(err))
   }
 
 </script>
@@ -234,6 +234,7 @@
                   <label for="admYr">admission year</label>
                   <select name="admissionYear" id="admYr" required>
                     <option value="">Admission Year</option>
+                    <option value="2023">2023</option>
                     <option value="2022">2022</option>
                     <option value="2021">2021</option>
                     <option value="2020">2020</option>

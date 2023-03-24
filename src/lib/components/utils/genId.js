@@ -1,8 +1,6 @@
 async function getDB(dbCollection) {
-  let baseUrl = 'https://getpantry.cloud/apiv1/pantry/8e96f3a9-a647-4f37-931d-586203d634b3/basket'
-  const res = await fetch(`${baseUrl}/${dbCollection}`)
+  const res = await fetch(`api/${dbCollection}`)
   const resData = await res.json()
-
   return resData
 }
 
@@ -47,16 +45,16 @@ export async function genStudtId(frmData) {
   const { branchCode, admissionYear, name } = frm;
 
   // student database 
-  const students = (await getDB('student'))[`branch${branchCode}`];
+  const students = await getDB('student'); 
+  
   // return students;
   // student ID = year(last two digits) + sch branch code + three Random num + 2studt's name initials
   // i.e student ID = 22001321JM
   let admYr = admissionYear.slice(2);
   let nameInitials = name.first[0].toLocaleUpperCase() + name.last[0].toLocaleUpperCase();
   let arrOfIds = [];
-  let allGivenStdIdsForTheSection = students
-    .map(std => std.studtId)
-  ;
+  let allGivenStdIdsForTheSection = students.studts.map(std => std.studtId);
+
   // generate 5 random student ids & select one not yet given
   for (let i = 0; i < 15; i++) {
     let randNum = genRandStr(3, {number: "number"});
