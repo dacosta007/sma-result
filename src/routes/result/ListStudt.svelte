@@ -196,11 +196,12 @@
     /* for newly created report, for a term in a new session */
     saveFrmt.meta.createdAt = new Date().toLocaleDateString()
     saveFrmt.midTerm.report[academicYear.currentTerm] = currentAddedSubj
-    saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment
-    saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment
+    saveFrmt.midTerm.comments[academicYear.currentTerm] = { teacher: '', principal: '' }
+    saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment ?? ""
+    saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment ?? ""
     saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
+    // console.log(saveFrmt)
     
-
     // save to database
     fetch('/api/result', {
       method: 'POST',
@@ -236,7 +237,7 @@
         alert('Report is successfully added into Database 😀')
       })
       .catch(err => console.error(err))
-    return
+      return
   }
 
 
@@ -266,7 +267,7 @@
       // if record are empty
       if ( getRept === undefined ) {
         console.log('report empty!. Returned empty report', getRept)
-        getRept = currentAddedSubj
+        getRept = currentAddedSubj ?? []
         stdDetail = std
         showModal = true
         return
