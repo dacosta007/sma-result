@@ -79,6 +79,13 @@
             {/each}
           </section>
 
+          <!-- to managing payment page -->
+          <div class="payment-link-btn-container">
+            <a href="/payment" class="p-link-btn">
+              <i class="lni lni-money-protection"></i> <span>manage payment</span>
+            </a>
+          </div>
+
           <!-- logout btn -->
           <div class="logout-container">
             <a href="#logout" on:click={() => { $AuthStore.isLoggedIn = false; login = false; }} class="auth-cta-btn">
@@ -160,5 +167,36 @@
   }
   .logout-container a {
     display: inline-block;
+  }
+  .payment-link-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+  }
+  .p-link-btn {
+    padding: 10px 8px;
+    background-color: var(--clr-sec);
+    color: var(--clr-off-white);
+    text-decoration: none;
+    text-transform: capitalize;
+    font-size: 13px;
+    font-family: var(--font-nunito);
+    letter-spacing: 0.8px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    border: 1px solid var(--clr-off-white);
+    border-radius: 4px;
+    box-shadow: 0px 19px 40px -12px rgb(41 36 72);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+  .p-link-btn:active {
+    animation: clickBtn 600ms ease alternate;
+  }
+  .p-link-btn i {
+    font-size: 28px;
   }
 </style>
