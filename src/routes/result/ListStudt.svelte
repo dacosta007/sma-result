@@ -156,9 +156,9 @@
       saveFrmt.midTerm.comments[academicYear.currentTerm].teacher = tComment ?? ""
       saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment ?? ""
       saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
+      saveFrmt.currentTerm = academicYear.currentTerm // current term of report to be saved in DB
       // console.log(saveFrmt)
 
-      
       fetch('/api/result', {
         method: 'PUT',
         headers: { "Content-Type": "application/json" },
@@ -189,7 +189,6 @@
           alert('Report is successfully updated 😀')
         })
         .catch(err => console.log(err))
-     
       return
     }
 
@@ -201,7 +200,7 @@
     saveFrmt.midTerm.comments[academicYear.currentTerm].principal = pComment ?? ""
     saveFrmt.cummulative.midTerm[academicYear.currentTerm] = cummulative
     // console.log(saveFrmt)
-    
+
     // save to database
     fetch('/api/result', {
       method: 'POST',
@@ -237,6 +236,7 @@
         alert('Report is successfully added into Database 😀')
       })
       .catch(err => console.error(err))
+
       return
   }
 

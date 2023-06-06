@@ -1,6 +1,6 @@
 <script>
   import ResultSlip from "./ResultSlip.svelte";
-  import ResultNotice from "./ResultNotice.svelte";
+  // import ResultNotice from "./ResultNotice.svelte";
 
   export let data
   
@@ -13,7 +13,7 @@
 
 <article>
   <!-- <ResultNotice reports={data.res.branch002} docId={data.docId} /> -->
-  <ResultSlip reportData={data.res} docId={data.docId} />
+  <ResultSlip reportData={data.res} />
 </article>
 
 <style>

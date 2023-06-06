@@ -36,7 +36,8 @@ export async function PUT({ request }) {
     let uptdOpts = { $set: {} }
 
     // report type can be 'midTerm' or 'exam' (this should be set dynamically, i.e: from submitted form)
-    let reportType = 'midTerm', term = 'second'
+    // console.log(`Current Term: ${resultData.currentTerm}`)
+    let reportType = 'midTerm', term = resultData.currentTerm
 
     if (reportType === 'midTerm') {
       uptdOpts.$set[`${reportType}.report.${term}`] = resultData.midTerm.report[term] 

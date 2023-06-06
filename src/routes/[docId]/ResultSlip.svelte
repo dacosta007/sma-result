@@ -3,7 +3,6 @@
   import ResultBody from "./ResultBody.svelte";
   
   export let reportData
-  export let docId
 </script>
 
 <!-- <svelte:head>
@@ -14,7 +13,7 @@
   <div class="slip">
     <ResultHeader />
     
-    <ResultBody report={reportData} docId={docId} />
+    <ResultBody report={reportData} />
   </div>
 </section>
 

@@ -1,19 +1,15 @@
 <script>
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
-  import { ResultStore } from "$lib/stores/ResultStore"
 
   export let report
-  export let docId
-  
-  // console.log(report)
-  // console.log($ResultStore)
-  console.log(docId)
+
   // report = report.find(ele => ele.meta.studtId === docId)
 
   let { meta, midTerm, cummulative } = report
   
-
-  let term = 'first'
+  let { currentTerm } = $BranchInfoStore.academicYear
+  
+  let term = currentTerm
 
   let results = midTerm.report[term]
   let tComment = midTerm.comments[term].teacher

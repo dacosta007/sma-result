@@ -16,7 +16,7 @@ export async function load({ params }) {
     // let tst = res._id
     // console.log(res, tst)
 
-    return { res: res, docId }
+    return { res: res }
   } catch (err) {
     console.log(`Error Result Page: ${err}`)
 
