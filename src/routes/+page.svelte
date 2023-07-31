@@ -84,6 +84,11 @@
             <a href="/payment" class="p-link-btn">
               <i class="lni lni-money-protection"></i> <span>manage payment</span>
             </a>
+
+            <!-- manage student promotion & graduation -->
+            <a href="/promotion" class="promotion-btn" data-sveltekit-preload-code="hover">
+              <i class="lni lni-graduation"></i> <span>promotion</span>
+            </a>
           </div>
 
           <!-- logout btn -->
@@ -170,11 +175,11 @@
   }
   .payment-link-btn-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    padding: 1em;
+    padding: 1em 0em;
   }
-  .p-link-btn {
+  .p-link-btn, .promotion-btn {
     padding: 10px 8px;
     background-color: var(--clr-sec);
     color: var(--clr-off-white);
@@ -193,10 +198,10 @@
     align-items: center;
     gap: 1em;
   }
-  .p-link-btn:active {
+  .p-link-btn:active, .promotion-btn:active {
     animation: clickBtn 600ms ease alternate;
   }
-  .p-link-btn i {
+  .p-link-btn i, .promotion-btn i {
     font-size: 28px;
   }
 </style>
