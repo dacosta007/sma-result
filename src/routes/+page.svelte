@@ -113,6 +113,7 @@
     width: 100%;
     height: 100vh;
     max-height: 100%;
+    overflow: auto;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -122,7 +123,7 @@
     padding: 2em 0;
   }
   .action-content {
-    padding-top: 4em;
+    padding-top: 2em;
   }
   .sch-logo-sec {
     margin-bottom: 2.5em;
@@ -174,9 +175,9 @@
     display: inline-block;
   }
   .payment-link-btn-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
     padding: 1em 0em;
   }
   .p-link-btn, .promotion-btn {

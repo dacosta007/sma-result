@@ -53,7 +53,7 @@
         <i class="ti ti-more dropdown-btn" on:click|self={dropdown} on:keypress|self={dropdown}></i>
         
         <div class="dropdown" class:show-dropdown={showDropdown === true}>
-          <!-- icon to toggle payment status -->
+          <!-- icon to toggle overall performance status -->
           <div 
             data-std-id="{std.studtId}" 
             data-preview="overallPreview" 
@@ -74,7 +74,6 @@
               promotion
             </span>
           </div>
-
           <!-- toggle term subject terms stats for the session -->
           <div 
             data-std-id="{std.studtId}" 
@@ -94,6 +93,27 @@
               on:click|self={showStudent} 
               on:keypress|self={showStudent}>
               subject stats
+            </span>
+          </div>
+          <!-- show report sheet -->
+          <div 
+            data-std-id="{std.studtId}" 
+            data-preview="reportSheet" 
+            on:click|self={showStudent} 
+            on:keypress|self={showStudent}>
+            <i 
+              class="ti ti-file" 
+              data-std-id="{std.studtId}" 
+              data-preview="reportSheet" 
+              on:click|self={showStudent} 
+              on:keypress|self={showStudent}>
+            </i>
+            <span 
+              data-std-id="{std.studtId}" 
+              data-preview="reportSheet" 
+              on:click|self={showStudent} 
+              on:keypress|self={showStudent}>
+              report sheet
             </span>
           </div>
         </div>

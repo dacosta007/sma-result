@@ -10,6 +10,7 @@
   import PromotionInfo from "./perf/PromotionInfo.svelte"
   import Promotion from "./perf/Promotion.svelte"
   import OverallSubjStat from "./perf/OverallSubjStat.svelte"
+  import PreviewRept from "./preview/PreviewRept.svelte"
 
   export let allStudts = []
   export let allReports = []
@@ -17,6 +18,7 @@
   let dispatch = createEventDispatcher()
 
   let currentSession = $BranchInfoStore?.academicYear?.session
+  let currentTerm = $BranchInfoStore?.academicYear?.currentTerm
   
   // all completed reports with promotion or graduation for the current session
   let getStudtWithPromo = allStudts.filter(ele => ele?.promotion != undefined || ele?.graduation != undefined)
@@ -49,6 +51,7 @@
   let showOverallPreview = false
   let showSubjSessionStats = false
   let showOverallSubjStats = false
+  let showReportSheet = false
 
   /* holds details on student's report and info */
   let stdDetail = {} // should be from students DB
@@ -97,6 +100,16 @@
       showSubjSessionStats = true
       return
     }
+    if (previewType === 'reportSheet') {
+      // check if report for the current term is already computed
+      let chkTermRept = stdReptDetail?.cummulative?.exam[`${currentTerm}`]
+      if (chkTermRept === undefined) {
+        alert(`⚠ There is no report computed for this term(${currentTerm}) 🚧`)
+        return
+      }
+      showReportSheet = true
+      return
+    }
   }
 
   /* help close the performance window */
@@ -120,6 +133,11 @@
   /* help close overall subject stats */
   function closeOverallSubjStats(evt) {
     showSubjSessionStats = evt.detail === 'close' ? false : true
+  }
+
+  /* close report sheet */
+  function closeReportSheet(evt) {
+    showReportSheet = evt.detail === 'close' ? false : true
   }
 
   /* update student promotion/graduation info in DB */
@@ -295,7 +313,7 @@
       <!-- terms session performance report for the session -->
       <TermReport examCumm={stdReptDetail?.cummulative?.exam} reptSession={stdReptDetail?.meta?.session} />
       <!-- circular progress bar for overall session performance & grade -->
-      <OverallPerf overallCummulatives={stdReptDetail?.cummulative?.exam} reptSession={stdReptDetail?.meta?.session} on:subjStats={subjStats} />
+      <OverallPerf sessionRept={stdReptDetail} currentSession={stdReptDetail?.meta?.session} on:subjStats={subjStats} />
       <!-- class promotion or graduation -->
       <PromotionInfo 
         classInfo={stdReptDetail?.meta} 
@@ -314,6 +332,11 @@
 
   {#if showSubjSessionStats === true}
     <OverallSubjStat stdRept={stdReptDetail} on:closeOverallSubjStats={closeOverallSubjStats} />
+  {/if}
+
+  <!-- Preview report sheet -->
+  {#if showReportSheet === true}
+    <PreviewRept term={currentTerm} {stdDetail} stdRept={stdReptDetail} on:closeReptSheet={closeReportSheet} />
   {/if}
 </article>
 

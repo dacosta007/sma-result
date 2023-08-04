@@ -1,25 +1,67 @@
 <script>
   import { createEventDispatcher } from "svelte"
+  import { gradeScore } from "$lib/components/utils/gradeScore"
   import ProgressBar from "./ProgressBar.svelte"
   import ProgressBarStat from "./ProgressBarStat.svelte"
 
+  
+  export let sessionRept = {}
+  export let currentSession = '2022/2023'
+  
   let dispatch = createEventDispatcher()
 
-  export let overallCummulatives = {}
-  export let reptSession = '2022/2023'
+  let { exam } = sessionRept
 
-  // help format data required to be worked on
-  let dataFormat = Object.values(overallCummulatives)
+  /* all student's reports throughout the session(first, second, & third term) */
+  const firstTerm = exam?.report?.first ?? []
+  const secondTerm = exam?.report?.second ?? []
+  const thirdTerm = exam?.report?.third ?? []
 
-  let totalObtainable = dataFormat.reduce((acc, ele) => acc + ele.obtainable, 0)
-  let totalObtained = dataFormat.reduce((acc, ele) => acc + ele.obtained, 0)
+  /* all subjects offered by the students */
+  let subjFirst = firstTerm.map(ele => ele.subj)
+  let subjSecond = secondTerm.map(ele => ele.subj)
+  let subjThird = thirdTerm.map(ele => ele.subj)
+  let allSubjs = [].concat(subjFirst, subjSecond, subjThird)
+  // filter-out duplicate
+  allSubjs = [...(new Set(allSubjs))]
+
+  // all the stats subjs for the session(first, second, & third term)
+  const subjStats = allSubjs.map(subject => {
+    let obj = {}
+    obj['subj'] = subject
+    obj['first'] = (firstTerm.find(totPer => totPer?.subj === subject))?.totalMark ?? 0
+    obj['second'] = (secondTerm.find(totPer => totPer?.subj === subject))?.totalMark ?? 0
+    obj['third'] = (thirdTerm.find(totPer => totPer?.subj === subject))?.totalMark ?? 0
+
+    // help get all total recorded term count
+    let termsRecorded = 0
+    if (obj.first > 0) {
+      termsRecorded += 1
+    }
+    if (obj.second > 0) {
+      termsRecorded += 1
+    }
+    if (obj.third > 0) {
+      termsRecorded += 1
+    }
+
+    // cummulative Avg. for the session (first/second/third term total marks/scores) / (100 * terms recorded) * 100
+    obj['cumm'] = Math.round( parseFloat((((obj.first + obj.second + obj.third) / (100 * termsRecorded)) * 100).toFixed(2)) )
+    obj['grade'] = gradeScore(obj.cumm).grade
+    obj['gradeClr'] = gradeScore(obj.cumm).gradeClr
+
+    return obj
+  })
+
+  // total obtainable & obtained marks(scores) for the session
+  let totalObtainable = (subjStats.length * 100)
+  let totalObtained = subjStats.reduce((acc, ele) => acc += ele?.cumm, 0)
+
   // take the last entry of term report total subject as value
-  let totalSubjs = dataFormat[(dataFormat.length) - 1].totalSubj
-
-  // console.log(`Total Obtainable: ${totalObtainable}`, `Total Obtained: ${totalObtained}`)
+  let totalSubjs = allSubjs.length
 
   // the overall term percentage scored: (total obtained / total obtainable) * 100
-  const overallPercentage = Math.round(parseFloat(((totalObtained / totalObtainable) * 100).toFixed(3)))
+  const overallPercentage = Math.round((totalObtained / totalObtainable) * 100)
   
   // overall stats for the session: (total Obtainable, total Obtained, total subjects, grade value)
   const stats = { totalObtainable, totalObtained, overallPercentage, totalSubjs }
@@ -28,7 +70,7 @@
 
 <section class="overall-perf-sec">
   <header class="header-sec">
-    <h5 class="title">stats for {reptSession} session</h5> 
+    <h5 class="title">stats for {currentSession} session</h5> 
     <!-- help show overall subject stats records for the session -->
     <button class="ghost-btn" on:click={() => dispatch('subjStats', true)}>
       view subject stats

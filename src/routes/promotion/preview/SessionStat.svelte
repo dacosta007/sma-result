@@ -1,15 +1,18 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  import { fade } from "svelte/transition";
   import { gradeScore } from "$lib/components/utils/gradeScore"
 
-  export let sessionRept = {}
-  
-  // console.log(sessionRept)
+  export let stdRept = {}
+  export let stdDetail = {}
 
-  let dispatch = createEventDispatcher()
+  let { meta:stdMeta, exam } = stdRept
 
-  let { meta:stdMeta, exam } = sessionRept
+  let promotion = stdDetail?.promotion ?? []
+  let graduation = stdDetail?.graduation ?? {}
+
+  let promotionStatus = promotion.find(ele => ele?.session === stdRept?.meta?.session)
+  let graduationStatus = graduation?.graduated
+
+  let studtCls = `${stdDetail?.class?.category} ${stdDetail?.class?.level}`
 
   /* all student's reports throughout the session(first, second, & third term) */
   const firstTerm = exam?.report?.first ?? []
@@ -62,26 +65,24 @@
 
   // overall stats for the session: (total Obtainable, total Obtained, total subjects, grade value)
   const overallStats = { totalObtainable, totalObtained, overallPercentage, totalSubjs, grade: gradeScore(overallPercentage).grade }
-
-  // close subjects stats components
-  function closeSubjStats() {
-    dispatch('closeSubjStats', 'close')
-  }
 </script>
 
+<!-- student's name -->
+<header class="center-text">
+  <h3 class="std-name">{stdMeta.name.first} {stdMeta.name.last}</h3>
+</header>
 
-<article class="subj-stat-sec">
-  <section class="stat-content" transition:fade={{duration: 500}}>
-    <header class="header-sec center-text">
-      <!-- close subject stats -->
-      <!-- svelte-ignore a11y-no-static-element-interactions -->
-      <i class="lni lni-close close-btn" on:click={closeSubjStats} on:keypress={closeSubjStats}></i>
-      <h2 class="title">session stats report ({stdMeta.session})</h2>
-      <h4>
-        <div>{stdMeta?.name?.first} {stdMeta?.name?.last}</div>
-        <div><span>{stdMeta?.studtId}</span></div>
-      </h4>
-    </header>
+<section class="slip-body">
+  <div class="result-sec">
+    <!-- report watermark -->
+    <div class="watermark-sec">
+      {#if studtCls != 'sss 3' && promotionStatus != undefined}
+        <img src="/imgs/promoted_crown_stamp_red.png" alt="promoted_stamp_red" width="200" height="auto">
+      {/if}
+      {#if studtCls === 'sss 3' && graduationStatus != undefined}
+        <img src="/imgs/graduated_stamp_txt.png" alt="graduated_stamp" width="200" height="auto">
+      {/if}
+    </div>
 
     <div class="stats-container">
       <table>
@@ -108,6 +109,7 @@
           {/each}
         </tbody>
       </table>
+      <!-- overall cummulated stats -->
       <div class="overall-cumm-sec">
         <div>
           <span>total subjects</span> <span>{totalSubjs}</span>
@@ -126,43 +128,46 @@
         </div>
       </div>
     </div>
-  </section>
-</article>
+  </div>
+</section>
+
 
 <style>
-  .subj-stat-sec {
-    position: fixed;
+  .std-name {
+    font-weight: lighter;
+  }
+  .slip-body {
     width: 100%;
-    height: 100vh;
-    overflow: auto;
-    top: 0;
-    left: 0;
-    z-index: 6;
-    background-color: rgb(0 0 0 / 30%);
-    backdrop-filter: blur(3px);
-  }
-  .stat-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
     position: relative;
-    background-color: var(--clr-white);
-    padding: 1.5em 1em;
-    border-radius: 2px;
-    width: 60%;
-    margin: 4% auto;
   }
-  .close-btn {
+  .result-sec {
+    width: 100%;
+    margin-top: 1em;
+    border: 1px solid var(--clr-off-white);
+    position: relative;
+    isolation: isolate;
+  }
+  .watermark-sec {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    padding: 0.5em;
-    font-size: 15px;
-    font-weight: bold;
-    background-color: rgb(106 104 114 / 26%);
-    color: #eaf1ffc7;
-    border-radius: 50%;
-    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .close-btn:active {
-    animation: clickBtn 0.5s ease;
+  .watermark-sec img {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    filter: opacity(0.3);
   }
   table {
     width: 100%;

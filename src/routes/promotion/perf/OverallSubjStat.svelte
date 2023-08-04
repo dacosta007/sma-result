@@ -6,7 +6,6 @@
   
   let dispatch = createEventDispatcher()
 
-
   let { meta, cummulative, exam } = stdRept
 
   // all cummulatives data for the session(first, second, & third)
