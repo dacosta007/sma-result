@@ -1,131 +1,208 @@
 <script>
-  import Card from "$lib/components/Card.svelte"
+  import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
+  import { ResultStore } from "$lib/stores/ResultStore"
+  import { AuthStore } from "$lib/stores/AuthStore"
 
-  const someJsonCode = `{
-    "error": {
-      "errors": [
-      {
-        "domain": "global",
-        "reason": "invalidParameter",
-        "message": "Invalid string value: 'asdf'. Allowed values: [mostpopular]",
-        "locationType": "parameter",
-        "location": "chart"
-      }
-      ],
-      "code": 400,
-      "message": "Invalid string value: 'asdf'. Allowed values: [mostpopular]"
-    }
-  }`;
+  import Login from "$lib/components/auth/Login.svelte"
+  import TileLink  from "$lib/components/auth/TileLink.svelte"
+
+  export let data
+
+  BranchInfoStore.set(data.branchInfo)
+  ResultStore.set(data.resultData)
+
+  let quickLinks = [
+    { title: 'student', subTitle: 'reg', href: "/student",  icon: 'lni-graduation' },
+    { title: 'teacher', subTitle: 'reg', href: "/teacher",  icon: 'lni-user' },
+    { title: 'print', subTitle: 'slip', href: '/slip', icon: 'lni-printer' },
+    { title: 'result', subTitle: 'compute', href: '/result', icon: 'lni-files' }
+  ]
+
+  // toggle login form
+  let login = false, homePageHeader = true
+
+  function showLoginFrm() {
+    login = !login
+    homePageHeader = !homePageHeader
+  }
+
+  function showPage(evt) {
+    homePageHeader = true
+    login = evt.detail
+  }
 </script>
 
 <svelte:head>
-  <title>Internal Server Error 🚧 🚩</title>
+  <title>AFSS Ibadan Result App</title>
+  <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
 </svelte:head>
 
 <main class="home-page">
-  <div class="info-container">
-    <Card>
-      <header class="header-sec">
-        <div class="img-container">
-          <img src="imgs/scheduled-maintenance-message_1.png" alt="maintenance_img" width="250" height="auto">
+  <section class="action-content">
+    {#if homePageHeader}
+      <header class="sch-logo-sec">
+        <div class="sch-logo">
+          <img src="imgs/AFSSLogo.png" alt="AFSS school logo" width="130" height="auto">
         </div>
-        <h2 class="title">500 Internal server error</h2>
-      </header>
-  
-      <section class="msg-container">
-        <p>
-          Sorry, something went wrong. Please contact your engineering team or webmaster to trouble shot with the code below:
-        </p>
-  
-        <div class="server-code-err">
-          <code>
-            $2a$04$H4EvhNdqqjcxb4FsE/NAKOZljtLHioFMer9qkDTV9BjjO31qH8xpW-
-            $2a$04$yeGXoFAjezsfPNg.JAV/s.Npi0XJoLiN.315QyK8j8o6bNdizaTeW-
-            $2a$04$OS4pA.hNf8GB/VYO4NuZdeA2U7J5zKiTj.exhUCrzTlX5F1t5eGyu.
-            $2a$04$DQXV1tak6VqPOyyKaJDlg.Jit7isK1uGD7zBOQtRFOyupotCn4a3O
-          </code>
-    
-          <pre>{someJsonCode}</pre>
-        </div>
-  
-        <p>some list of causes:</p>
-  
-        <ul>
-          <li>System Zero downtime Maintenance</li>
-          <li>Server Deprecated Resources</li>
-          <li>Some DB Clusters Deficit</li>
-          <li>APIs Bad Request</li>
-        </ul>
 
-        <div class="msg-strong">Please contact support.</div>
-      </section>
-    </Card>
-  </div>
+        <h2>Result App</h2>
+      </header>
+    {/if}
+    
+    <section class="auth-cta-btn-sec">
+      {#if login === false}
+        {#if $AuthStore.isLoggedIn === false}
+          <a href="#login" on:click={showLoginFrm} class="auth-cta-btn">login</a> 
+          <a href="#signup" class="auth-cta-btn auth-cta-btn-2">signup</a>
+        {/if}
+      {/if}
+
+      <!-- Auth -->
+      <div class="auth-login">
+        {#if login}
+          <Login on:showAuth={showPage} />
+
+          <!-- go back home -->
+          <a href="#home" style="margin-top:1.5em; display:inline-block" on:click={showLoginFrm} class="auth-cta-btn auth-cta-btn-2">
+            go back home
+          </a>
+        {/if}
+      </div>
+
+      <!-- App Auth links -->
+      {#if $AuthStore.isLoggedIn === true}
+        <!-- links to pages -->
+        <article class="app-features-sec">
+          <section class="quick-nav">
+            {#each quickLinks as link}
+              <TileLink linkObj={link} />
+            {/each}
+          </section>
+
+          <!-- to managing payment page -->
+          <div class="payment-link-btn-container">
+            <a href="/payment" class="p-link-btn">
+              <i class="lni lni-money-protection"></i> <span>manage payment</span>
+            </a>
+
+            <!-- manage student promotion & graduation -->
+            <a href="/promotion" class="promotion-btn" data-sveltekit-preload-code="hover">
+              <i class="lni lni-graduation"></i> <span>promotion</span>
+            </a>
+          </div>
+
+          <!-- logout btn -->
+          <div class="logout-container">
+            <a href="#logout" on:click={() => { $AuthStore.isLoggedIn = false; login = false; }} class="auth-cta-btn">
+              logout
+            </a>
+          </div>
+        </article>
+      {/if}
+    </section>
+
+  </section>
+
+  <footer class="copyright-sec">
+    <small>Copyright &copy;2022. AFSS Ibadan<sup>&trade;</sup> All rights Reserved</small>
+  </footer>
 </main>
 
 <style>
   .home-page {
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     max-height: 100%;
     overflow: auto;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     background-color: var(--clr-sec);
-    padding: 2em 1em;
+    color: var(--clr-off-white);
+    padding: 2em 0;
   }
-  .info-container {
-    width: clamp(350px, 70%, 700px);
+  .action-content {
+    padding-top: 2em;
   }
-  .header-sec {
-    padding: 0.8em 1.4em;
+  .sch-logo-sec {
+    margin-bottom: 2.5em;
     text-align: center;
   }
-  .img-container {
-    position: relative;
-  }
-  .img-container img {
+  .auth-cta-btn-sec {
+    display: grid;
+    gap: 2em;
+    margin-bottom: 1em;
     width: 100%;
-    height: auto;
+    min-width: 335px;
   }
-  .header-sec h2 {
-    margin-top: -2em;
+  .auth-cta-btn {
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    font-size: 16px;
+    font-family: var(--font-quicksand);
+    background-color: var(--clr-off-white);
+    color: var(--clr-sec);
+    padding: 10px 12px;
+    border-radius: 21px;
+    width: 100%;
+    appearance: none;
+    outline: none;
+    transition: background-color 0.5s ease;
   }
-  .msg-container {
-    padding: 0em 1.4em;
+  .auth-cta-btn:hover {
+    background-color: #dce1ec;
   }
-  .msg-container p {
-    font-size: 14px;
+  .auth-cta-btn-2 {
+    background-color: transparent;
+    color: var(--clr-off-white);
   }
-  .server-code-err {
-    background-color: var(--clr-sec);
-    color: silver;
-    padding: 0.5em;
-    border-radius: 0.5em;
-    overflow: auto;
+  .auth-cta-btn-2:hover {
+    background-color: #eaf1ff6e;
+    color: var(--clr-white);
   }
-  ul {
-    font-size: 13px;
-    list-style-type: disc;
-    padding-left: 15px;
+  .quick-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
   }
-  .msg-strong {
-    font-size: 14px;
-    font-weight: bold;
+  .logout-container {
+    margin-top: 3em;
+  }
+  .logout-container a {
+    display: inline-block;
+  }
+  .payment-link-btn-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
     padding: 1em 0em;
   }
-
-  @media (max-width: 500px) {
-    .home-page {
-      display: block;
-    }
-    .info-container {
-      overflow: hidden;
-      margin-top: 0;
-      width: 100%;
-    }
-    .header-sec h2 {
-      margin-top: -1.5em;
-    }
+  .p-link-btn, .promotion-btn {
+    padding: 10px 8px;
+    background-color: var(--clr-sec);
+    color: var(--clr-off-white);
+    text-decoration: none;
+    text-transform: capitalize;
+    font-size: 13px;
+    font-family: var(--font-nunito);
+    letter-spacing: 0.8px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    border: 1px solid var(--clr-off-white);
+    border-radius: 4px;
+    box-shadow: 0px 19px 40px -12px rgb(41 36 72);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+  .p-link-btn:active, .promotion-btn:active {
+    animation: clickBtn 600ms ease alternate;
+  }
+  .p-link-btn i, .promotion-btn i {
+    font-size: 28px;
   }
 </style>
