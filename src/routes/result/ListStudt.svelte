@@ -1,4 +1,5 @@
 <script>
+  import { createEventDispatcher } from "svelte"
   import { LocalStore } from "$lib/stores/LocalStore"
   import { ResultStore } from "$lib/stores/ResultStore"
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
@@ -12,6 +13,8 @@
   export let allStudts
   export let resultPref
   export let subjects
+
+  let dispatch = createEventDispatcher()
 
   let studts = allStudts
   $LocalStore = allStudts
@@ -217,7 +220,6 @@
         }
         
         // add report to store
-        // console.log(`ResultStore before record is added: ${$ResultStore.length}`)
         ResultStore.update((items) => {
           if (items === undefined) {
             items = [saveFrmt]
@@ -226,7 +228,10 @@
           items = [...items, saveFrmt]
           return items
         })
-        // console.log(`ResultStore after record is added: ${$ResultStore.length}`)
+
+        // send the total computed count to the parent container to display
+        dispatch('countComputed', $ResultStore.length)
+
         // link to preview student's result
         disableLink = false
         // close compute modal & clear currentAddedSubj
@@ -236,8 +241,8 @@
         alert('Report is successfully added into Database 😀')
       })
       .catch(err => console.error(err))
-
-      return
+    ;
+    return
   }
 
 
@@ -266,7 +271,7 @@
       let getRept = $ResultStore.find(ele => ele.meta.studtId === stdId)
       // if record are empty
       if ( getRept === undefined ) {
-        console.log('report empty!. Returned empty report', getRept)
+        // console.log('report empty!. Returned empty report', getRept)
         getRept = currentAddedSubj ?? []
         stdDetail = std
         showModal = true
@@ -309,14 +314,12 @@
   function reportComments(evt) {
     tComment = evt.detail.tComment
     pComment = evt.detail.pComment
-    console.log({tComment, pComment})
 
     addReptComment = false;
   }
 
   // show section for adding comments on report
   function showCommentSec() {
-    // console.log(stdDetail)
     addReptComment = true
   }
 </script>

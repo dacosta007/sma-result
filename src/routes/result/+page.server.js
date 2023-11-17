@@ -9,9 +9,10 @@ export async function load() {
 
   let subjs = await subjects.findOne({ branchCode: "002" }, { projection: { _id: 0, subjects: 1 } })
 
-  let studts = await students.find({}, { projection: { _id: 0 } }).toArray()
+  let queryOptStd = { graduation: {$exists: false} }
+  let studts = await students.find(queryOptStd, { projection: { _id: 0 } }).toArray()
 
-  // console.log({ resultPref, studts, subjs })
+  console.log({ studts: studts.length })
   return {
     resultPref,
     studts,

@@ -1,22 +1,26 @@
 import { error } from "@sveltejs/kit"
 import { results } from "$db/collections/results"
-import { ObjectId } from "mongodb"
+import { branches } from "$db/collections/branches"
 
 export async function load({ params }) {
   let docId = params.docId
-
+  
   try {
-    let query = { "meta.studtId": docId }
-    let queryOpt = { projection: { _id: 0 } }
-    
-    let res = await results.findOne(query, queryOpt)
-    // help convert MongoDB new ObjectId() to POJO(Plain Old JavaScript Object) string
-    // console.log(res._id)
-    // res._id = ObjectId(res._id).valueOf()
-    // let tst = res._id
-    // console.log(res, tst)
+    let queryBranches = ({ "branch.code": "002" })
+    let branchData = await branches.findOne(queryBranches, { projection: { _id: 0, academicYear: 1 } })
 
-    return { res: res }
+    async function resultDataForCurrentSession() {
+      const branchCurrentSession = branchData?.academicYear?.session
+
+      let queryOpt = { projection: { _id: 0 } }
+      let query = { "meta.session": branchCurrentSession, "meta.studtId": docId }
+      
+      let res = await results.findOne(query, queryOpt)
+      
+      return res
+    }
+
+    return { res: resultDataForCurrentSession() }
   } catch (err) {
     console.log(`Error Result Page: ${err}`)
 

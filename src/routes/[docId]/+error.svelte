@@ -5,6 +5,8 @@
 <div class="error-container">
   <div class="msg">
     <h1>{$page.error.message}</h1>
+    <br>
+    <a href="/">home</a>
   </div>
 </div>
 
