@@ -8,7 +8,7 @@ export async function PUT({ request }) {
 
   try {
     let query = { studtId: studtId }
-    // (promotionType === 'graduation') ? { $set: { graduation: stdData } } : { $set: { promotion: stdData } }
+
     let uptdOpts = {}
 
     if (promotionType === 'graduation') {

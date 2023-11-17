@@ -7,7 +7,7 @@
   import TileLink  from "$lib/components/auth/TileLink.svelte"
 
   export let data
-
+  
   BranchInfoStore.set(data.branchInfo)
   ResultStore.set(data.resultData)
 
@@ -91,6 +91,13 @@
             </a>
           </div>
 
+          <!-- to previewing and printing spreadsheet -->
+          <div class="spreadsheet-link-conatainer">
+            <a href="/spreadsheets" class="spreadsheet-btn">
+              <i class="lni lni-files"></i> <span>spreadsheet</span>
+            </a>
+          </div>
+
           <!-- logout btn -->
           <div class="logout-container">
             <a href="#logout" on:click={() => { $AuthStore.isLoggedIn = false; login = false; }} class="auth-cta-btn">
@@ -126,7 +133,7 @@
     padding-top: 2em;
   }
   .sch-logo-sec {
-    margin-bottom: 2.5em;
+    margin-bottom: 0.5em;
     text-align: center;
   }
   .auth-cta-btn-sec {
@@ -204,5 +211,32 @@
   }
   .p-link-btn i, .promotion-btn i {
     font-size: 28px;
+  }
+  .spreadsheet-link-conatainer {
+    position: relative;
+  }
+  .spreadsheet-btn {
+    padding: 10px 8px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: capitalize;
+    letter-spacing: 0.8px;
+    font-size: 13px;
+    font-family: var(--font-nunito);
+    border-radius: 4px;
+    background-color: rgb(109 129 254 / 30%);
+    color: var(--clr-off-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+  }
+  .spreadsheet-btn i {
+    font-size: 26px;
+  }
+  .spreadsheet-btn:active {
+    animation: clickBtn 600ms ease alternate;
   }
 </style>

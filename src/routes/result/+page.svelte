@@ -1,4 +1,5 @@
 <script>
+  import { ResultStore } from "$lib/stores/ResultStore"
   import { LocalStore } from "$lib/stores/LocalStore"
   import ListStudt from "./ListStudt.svelte";
   import Stats from "./Stats.svelte";
@@ -7,7 +8,14 @@
 
   LocalStore.set(data.studts)
 
-  </script>
+  $:alreadyComputed = $ResultStore.length
+
+  /* help display total report computed or added into the DB for current term within the session */
+  function countAlreadyComputed(evt) {
+    alreadyComputed = parseInt(evt.detail)
+    return
+  }
+</script>
 
 <!-- in case redirected back from printing report document -->
 <svelte:head>
@@ -25,7 +33,7 @@
     </section>
   
     <section class="overall-stat-sec">
-      <Stats studts={data.studts} />
+      <Stats studts={data.studts} reptComptd={alreadyComputed} />
     </section>
   </section>
 
@@ -45,5 +53,8 @@
   }
   .studts-sec {
     padding: 0.5em 2em;
+  }
+  .overall-stat-sec {
+    position: relative;
   }
 </style>
