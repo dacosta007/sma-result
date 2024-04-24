@@ -2,12 +2,9 @@
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
 
   export let report
-
-  // report = report.find(ele => ele.meta.studtId === docId)
+  export let currentTerm
 
   let { meta, midTerm, cummulative } = report
-  
-  let { currentTerm } = $BranchInfoStore.academicYear
   
   let term = currentTerm
 
@@ -63,7 +60,7 @@
     <!-- date -->
     <div class="std-info">
       <span class="info-title">data</span>
-      <span class="info">{meta.createdAt}</span>
+      <span class="info">{new Date(meta.createdAt).toLocaleDateString()}</span>
     </div>
   </div>
 </section>

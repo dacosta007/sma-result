@@ -5,6 +5,7 @@
 
   import Login from "$lib/components/auth/Login.svelte"
   import TileLink  from "$lib/components/auth/TileLink.svelte"
+  import AcademicInfo from "$lib/components/AcademicInfo.svelte"
 
   export let data
   
@@ -71,8 +72,12 @@
 
       <!-- App Auth links -->
       {#if $AuthStore.isLoggedIn === true}
-        <!-- links to pages -->
         <article class="app-features-sec">
+          <!-- info on sch's current academic section -->
+          <section class="academic-info-sec">
+            <AcademicInfo academicInfo={$BranchInfoStore?.academicYear} />
+          </section>
+          <!-- links to pages -->
           <section class="quick-nav">
             {#each quickLinks as link}
               <TileLink linkObj={link} />
@@ -111,7 +116,7 @@
   </section>
 
   <footer class="copyright-sec">
-    <small>Copyright &copy;2022. AFSS Ibadan<sup>&trade;</sup> All rights Reserved</small>
+    <small>Copyright &copy;2022 - {new Date().getFullYear()}. AFSS Ibadan<sup>&trade;</sup> All rights Reserved</small>
   </footer>
 </main>
 

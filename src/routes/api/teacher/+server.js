@@ -12,9 +12,6 @@ export async function POST({ request }) {
 
   let teachId = genTeachId(frm.branchCode)
   frm.teachId = teachId
-  // console.log(frm)
-  
-  // return new Response(JSON.stringify({ success: true, data: frm }), { status: 201 })
 
   // save data into db
   try {
@@ -54,8 +51,10 @@ export async function POST({ request }) {
       return new Response(saveData, { status: 201 })
     }
   } catch (err) {
-    console.log(err)
-    throw error(500, 'Server error: Please try again in a little while')
+    return json({ 
+      error: true, 
+      message: '🚨 Server error: Sorry!, something went wrong, and unable to process your infomation at the moment, please try again later.' 
+    }, 500)
   }
 }
 

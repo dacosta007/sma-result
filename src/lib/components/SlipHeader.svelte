@@ -2,10 +2,9 @@
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
 
   export let slipTitle
+  export let branchInfo
 
-  let { contact } = $BranchInfoStore
-  // let { schAddress } = contact
-  console.log($BranchInfoStore, contact)
+  let { contact } = branchInfo
 </script>
 
 <header class="slip-header center-text">
@@ -14,10 +13,10 @@
   </div>
   <div class="sch-info-container">
     <h2 class="sch-name">Apostolic Faith Secondary School</h2>
-    <h4 class="sch-address">{contact.schAddress ?? "SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State"}</h4>
+    <h4 class="sch-address">{contact?.schAddress ?? "SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State"}</h4>
     <h5 class="sch-contact">
-      <div><span>email:</span> <span>{contact.email[0]}</span></div>
-      <div><span>tel:</span> <span>{contact.phone[0]}</span></div>
+      <div><span>email:</span> <span>{contact?.email[0]}</span></div>
+      <div><span>tel:</span> <span>{contact?.phone[0]}</span></div>
     </h5>
   </div>
 </header>

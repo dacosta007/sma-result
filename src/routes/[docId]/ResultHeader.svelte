@@ -1,5 +1,10 @@
 <script>
   export let reportTitle = 'Mid-Term Report'
+  export let contactInfo = {
+    phone: [],
+    email: [],
+    schAddress: ''
+  }
 </script>
 
 <header class="center-text slip-header">
@@ -8,10 +13,10 @@
   </div> 
   <div class="sch-info-container">
     <h2 class="sch-name">Apostolic Faith Secondary School</h2> 
-    <h4 class="sch-address">SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State</h4> 
+    <h4 class="sch-address">{contactInfo?.schAddress ?? "SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State"}</h4> 
     <h5 class="sch-contact">
-      <div><span>email:</span> <span>info@afssibadan.com.ng</span></div> 
-      <div><span>tel:</span> <span>08034110127</span></div></h5>
+      <div><span>email:</span> <span>{contactInfo?.email[0] ?? "info@afssibadan.com.ng"}</span></div> 
+      <div><span>tel:</span> <span>{contactInfo?.phone[0] ?? "08034110127"}</span></div></h5>
   </div>
 </header>
 

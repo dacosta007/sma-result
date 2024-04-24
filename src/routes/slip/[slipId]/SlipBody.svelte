@@ -2,13 +2,13 @@
   import { BranchInfoStore } from "$lib/stores/BranchInfoStore"
 
   export let std
+  export let branchInfo
   export let watermark = 'original'
 
   let { name, gender, studtId, slipId, passport, class:stdCls } = std
   let { schoolingType, admissionYear, regDate } = std
 
-  let { academicYear } = $BranchInfoStore 
-  let { session, currentTerm } = academicYear
+  let { session, currentTerm } = branchInfo.academicYear
 
   function printSlip() {
     window.print()
@@ -60,7 +60,7 @@
           </div>
           <div class="info-data">
             <h5 class="info-title">date</h5>
-            <div class="info">{regDate}</div>
+            <div class="info">{new Date(regDate).toLocaleDateString()}</div>
           </div>
         </div>
         <!-- class & department -->

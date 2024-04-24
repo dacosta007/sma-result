@@ -4,6 +4,8 @@
 	export let outline = false, outlinePry = false, outlineSec = false;
 	export let outlineInfo = false, outlineSuccess = false;
 	export let outlineWarning= false, outlineDanger = false;
+	export let btnGhost = false, btnGhostSuccess = false, btnGhostWarning = false
+	export let btnGhostInfo = false, btnGhostDanger = false
 	export let block = false;
 	export let btnType = 'button';
 	export let disableBtn = false, showLoading = false, loadingStatus = 'loading...';
@@ -26,6 +28,11 @@
 		class:btn-outline-success={outlineSuccess} 
 		class:btn-outline-warning={outlineWarning} 
 		class:btn-outline-danger={outlineDanger} 
+		class:btn-ghost={btnGhost} 
+		class:btn-ghost-success={btnGhostSuccess} 
+		class:btn-ghost-warning={btnGhostWarning} 
+		class:btn-ghost-info={btnGhostInfo} 
+		class:btn-ghost-danger={btnGhostDanger} 
 		disabled={disableBtn} 
 		on:click
 	>
@@ -83,7 +90,7 @@
 	}
 
 	.btn:disabled:active {
-		animation: none;
+		animation: none !important;
 	}
 
 	.loading {
@@ -225,7 +232,37 @@
 	.btn-outline-danger:focus {
 		border-color: var(--accent-danger);
 	}
-	
+
+	.btn-ghost {
+		background-color: transparent;
+		color: var(--accent-info);
+		opacity: 1;
+		box-shadow: none;
+		transition: background 600ms ease-in-out;
+		font-variant: all-petite-caps;
+    padding: 9px 6px;
+	}
+
+	.btn-ghost:hover, .btn-ghost:focus {
+		background-color: rgba(212, 213, 229, 0.308);
+	}
+
+	.btn-ghost-success {
+		color: var(--accent-success);
+	}
+
+	.btn-ghost-info {
+		color: var(--accent-info);
+	}
+
+	.btn-ghost-warning {
+		color: var(--accent-warning);
+	}
+
+	.btn-ghost-danger {
+		color: var(--accent-danger);
+	}
+
 	@keyframes clickBtn {
 		from {
 			transform: scale(0.9);

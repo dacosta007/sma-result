@@ -303,6 +303,9 @@
     {:else}
       <h2>No Student found for the selected class</h2>
     {/each}
+    <div class="center-text">
+      <a href="/">Go back Home</a>
+    </div>
   </section>
 
   <!-- show overall session performance -->

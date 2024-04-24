@@ -30,14 +30,16 @@
   <section class="result-container">
     <section class="studts-sec">
       <ListStudt allStudts={data.studts} resultPref={data.resultPref} subjects={data.subjs.subjects} />
+
+      <div class="center-text" style="text-transform: capitalize;">
+        <a href="/">go back home</a> 
+      </div>
     </section>
   
     <section class="overall-stat-sec">
       <Stats studts={data.studts} reptComptd={alreadyComputed} />
     </section>
   </section>
-
-  <a href="/">go back home</a> 
 </article>
 
 <style>
