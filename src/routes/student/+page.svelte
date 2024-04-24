@@ -60,7 +60,7 @@
         department: frm.get('department')
       },
       admissionYear: frm.get('admissionYear'),
-      regDate: new Date().toLocaleDateString(),
+      regDate: new Date().toISOString(),
       schoolingType: frm.get('schoolingType'),
       passport: null,
       branchCode: '002'
@@ -68,6 +68,7 @@
 
     // disable button
     btnProps.showLoading = true;
+    btnProps.disableBtn = true;
     
     // generate student ID & save student's info to DB
     genStudtId(frmData).then(res => {
@@ -83,7 +84,6 @@
       })
         .then(res => res.json())
         .then(res => {
-          console.log(res)
           if (!res.success) {
             alert('🚨 Unable to added student into DB!')
             return
@@ -103,8 +103,6 @@
           })
 
           localStorage.setItem('students', JSON.stringify($StudentStore))
-          
-          console.log($StudentStore)
 
           // show success message & reset the form
           alert('Student saved success fully! 😀')
@@ -115,17 +113,21 @@
 
           // enable submit button
           btnProps.showLoading = false
+          btnProps.disableBtn = false
         })
         .catch(err => {
           console.error(err)
         })
-    }).catch(err => console.error(err))
+    }).catch(err => {
+      console.error(err)
+      alert('⚠🚨 Sorry!, unable to create & generate student account and ID. Please try again')
+    })
   }
 
 </script>
 
-<article class="studt-reg-section" out:fade={{delay: 0.5, duration: 20}}>
-  <div class="reg-container">
+<article class="studt-reg-section">
+  <div class="reg-container" transition:fade={{ duration: 500 }}>
     <Card>
       <header class="sch-logo-sec">
         <div class="sch-logo">
@@ -148,8 +150,8 @@
                   </label>
                 </div>
                 <small class="image-notice">
-                  <div>Upload Image</div>
-                  <div>Please note, student passport image shouldn't be more than <b>1mb</b></div>
+                  <div>Passport</div>
+                  <div>Image shouldn't be more than <b>1mb</b></div>
                 </small>
               </div>
             </div>
@@ -173,8 +175,8 @@
                   <label for="gender">gender</label>
                   <select name="gender" id="gender" required>
                     <option value="">Select Gender</option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                   </select>
                 </div>
               </div>
@@ -268,16 +270,16 @@
   .studt-reg-section {
     background-color: var(--clr-sec);
     width: 100%;
-    height: 100vh;
-    max-height: 100%;
+    height: auto;
+    min-height: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 2em 0;
     overflow: auto;
   }
   .reg-container {
     width: 60%;
+    height: 100%;
+    margin: 3em 0;
   }
   .sch-logo-sec {
     text-align: center;
@@ -296,10 +298,12 @@
   }
   .img label {
     display: block;
-    border: 1px solid var(--clr-off-white);
+    border: 2px dashed var(--clr-off-white);
     height: 180px;
     width: 80%;
     border-radius: 5px;
+    cursor: pointer;
+    position: relative;
   }
   .img label img {
     width: 100%;
@@ -345,10 +349,13 @@
   }
 
   @media (max-width: 600px) {
+    .studt-reg-section {
+      height: auto;
+    }
     .reg-container {
       width: 100%;
       height: 100%;
-      padding-right: 12px;
+      padding: 0 1em;
     }
     .form-data-sec {
       grid-template-columns: 1fr;
@@ -372,6 +379,16 @@
     .btn-container {
       padding: 0;
       margin-top: 1em;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .studt-reg-section {
+      height: auto;
+      display: block;
+    }
+    .reg-container {
+      padding: 0 1em;
     }
   }
 </style>

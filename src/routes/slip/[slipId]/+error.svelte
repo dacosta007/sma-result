@@ -5,6 +5,9 @@
 <div class="error-container">
   <div class="msg">
       <h1>{$page.error.message}</h1>
+      <div class="center-text">
+        <a href="/slip" style="text-transform: capitalize; margin-top: 2.5em;">go back</a>
+      </div>
   </div>
 </div>
 

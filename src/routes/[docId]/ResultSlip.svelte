@@ -3,6 +3,24 @@
   import ResultBody from "./ResultBody.svelte";
   
   export let reportData
+  export let branchData = { 
+    contact: {
+      phone: ['08034110127', '08073161483'],
+      email: ['info@afssibadan.com.ng', 'contact@afssib.com.ng'],
+      schAddress: 'SW8/803a, Lodge Street, Oke-Ado, Ibadan, Oyo State.'
+    }, 
+    academicYear: {
+      session: '2023/2024',
+      currentTerm: 'second',
+      currentTermBegins: '2024-01-09',
+      currentTermEnds: '2024-03-22',
+      nextTerm: 'third',
+      nextTermBegins: '2024-04-22'
+    } 
+  }
+
+  // get current term stored in the db or one specified by the admin
+  let { currentTerm } = branchData.academicYear
 </script>
 
 <!-- <svelte:head>
@@ -11,9 +29,9 @@
 
 <section class="slip-container">
   <div class="slip">
-    <ResultHeader />
+    <ResultHeader contactInfo={branchData.contact} />
     
-    <ResultBody report={reportData} />
+    <ResultBody report={reportData} {currentTerm} />
   </div>
 </section>
 

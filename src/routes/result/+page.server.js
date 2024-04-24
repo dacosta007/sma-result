@@ -12,7 +12,6 @@ export async function load() {
   let queryOptStd = { graduation: {$exists: false} }
   let studts = await students.find(queryOptStd, { projection: { _id: 0 } }).toArray()
 
-  console.log({ studts: studts.length })
   return {
     resultPref,
     studts,

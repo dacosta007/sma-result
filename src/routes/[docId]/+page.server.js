@@ -4,10 +4,12 @@ import { branches } from "$db/collections/branches"
 
 export async function load({ params }) {
   let docId = params.docId
+  // get student's branch code
+  let branchCode = (docId).slice(2, 5)
   
   try {
-    let queryBranches = ({ "branch.code": "002" })
-    let branchData = await branches.findOne(queryBranches, { projection: { _id: 0, academicYear: 1 } })
+    let queryBranches = ({ "branch.code": branchCode })
+    let branchData = await branches.findOne(queryBranches, { projection: { _id: 0, academicYear: 1, contact: 1 } })
 
     async function resultDataForCurrentSession() {
       const branchCurrentSession = branchData?.academicYear?.session
@@ -20,7 +22,7 @@ export async function load({ params }) {
       return res
     }
 
-    return { res: resultDataForCurrentSession() }
+    return { res: resultDataForCurrentSession(), branchData }
   } catch (err) {
     console.log(`Error Result Page: ${err}`)
 

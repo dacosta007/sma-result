@@ -193,6 +193,9 @@
     {:else}
       <h2>No Student found for the selected class</h2>
     {/each}
+    <div class="center-text" style="margin-top: 2.5em; text-transform: capitalize;">
+      <a href="/">go back home</a>
+    </div>
   </section>
 </article>
 

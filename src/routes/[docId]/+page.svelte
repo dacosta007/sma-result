@@ -3,7 +3,7 @@
   // import ResultNotice from "./ResultNotice.svelte";
 
   export let data
-  
+  let {res, branchData} = data
 </script>
 
 <svelte:head>
@@ -13,7 +13,7 @@
 
 <article>
   <!-- <ResultNotice reports={data.res.branch002} docId={data.docId} /> -->
-  <ResultSlip reportData={data.res} />
+  <ResultSlip reportData={res} {branchData} />
 </article>
 
 <style>

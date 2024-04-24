@@ -4,7 +4,7 @@
 
   export let data
 
-  const { std } = data
+  const { std, branchInfo } = data
 </script>
 
 <svelte:head>
@@ -13,9 +13,9 @@
 
 <article class="slip-container">
   <section class="slip">
-    <SlipHeader slipTitle={'Student Pre-Registration'} />
+    <SlipHeader slipTitle={'Student Pre-Registration'} {branchInfo} />
 
-    <SlipBody {std} watermark={'reg slip'} />
+    <SlipBody {std} {branchInfo} watermark={'reg slip'} />
   </section>
 </article>
 

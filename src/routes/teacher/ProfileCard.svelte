@@ -76,7 +76,7 @@
     </div>
     <!-- subject handled -->
     <div>
-      <h5 class="title">major subjects</h5>
+      <h5 class="title">teacher's subjects</h5>
       <div class="subj-list">
         {#each teacherInfo.subjects as subject}
           <div class="subj">

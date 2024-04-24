@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte"
-  import { scale, fade } from "svelte/transition";
+  import { scale } from "svelte/transition";
 
   import { subjectList } from "$lib/components/utils/subjectList"
   import { classesList } from "$lib/components/utils/classesList"
@@ -64,8 +64,13 @@
   let triggerFunc
 
   function createTeacher(event) {
-    if (allSubjs.length === 0 || allClasses.length === 0) {
-      alert('⚠ Please make sure you\'ve added "Classes and Subject"!')
+    btnProps.disableBtn = true
+    btnProps.showLoading = true
+
+    if (allSubjs.length === 0) {
+      alert('⚠ Please make sure you\'ve added "Subjects the teacher, teaches before you submit"')
+      btnProps.disableBtn = false
+      btnProps.showLoading = false
       return
     }
 
@@ -91,18 +96,22 @@
       .then(res => res.json())
       .then(res => {
         if (res.error) {
-          console.log(`⚠ ${res.message}`)
+          btnProps.disableBtn = false
+          btnProps.showLoading = false
           alert(`⚠ ${res.message}`)
           return
         }
         
-        // console.log(res)
         // dispatch/send updated data to parent component
         dispatch('createTeacher', res.data)
+
+        btnProps.disableBtn = false
+        btnProps.showLoading = false
       })
       .catch(err => {
-        console.error(err)
-        alert(`🚨 ${err.message}`)
+        alert(`${err.message}`)
+        btnProps.disableBtn = false
+        btnProps.showLoading = false
       })
   }
 
@@ -120,155 +129,157 @@
   }
 </script>
 
-<section class="addModal" class:show-addModal={showForm}>
-  <div class="addContent" in:fade out:scale>
-    <!-- create/update form -->
-    <form action="#" method="post" on:submit|preventDefault={triggerFunc}>
-      <header class="form-header">
-        <!-- close modal btn -->
-        <span class="ti ti-close close-content" on:click={closeContent} on:keypress={closeContent}></span>
+{#if showForm}
+  <section class="addModal">
+    <div class="addContent" transition:scale={{ duration: 300 }}>
+      <!-- create/update form -->
+      <form action="#" method="post" on:submit|preventDefault={triggerFunc}>
+        <header class="form-header">
+          <!-- close modal btn -->
+          <span class="ti ti-close close-content" on:click={closeContent} on:keypress={closeContent}></span>
 
-        <!-- sch logo -->
-        <div class="sch-logo">
-          <img src="imgs/AFSSLogo.png" alt="AFSS school logo" width="120" height="auto">
-        </div>
-        <!-- form title -->
-        <h3 class="title">
-          {#if formType != 'update'}
-            create teacher
-          {:else}
-            update teacher
-          {/if}
-        </h3>
-      </header>
+          <!-- sch logo -->
+          <div class="sch-logo">
+            <img src="imgs/AFSSLogo.png" alt="AFSS school logo" width="120" height="auto">
+          </div>
+          <!-- form title -->
+          <h3 class="title">
+            {#if formType != 'update'}
+              create teacher
+            {:else}
+              update teacher
+            {/if}
+          </h3>
+        </header>
 
-      <section>
-        <!-- teacher's name -->
-        <div class="tname-sec">
-          <div class="input-field">
-            <label for="fname">first name</label>
-            <input type="text" name="fname" id="fname" placeholder="First name" required>
-          </div>
-          <div class="input-field">
-            <label for="lname">first name</label>
-            <input type="text" name="lname" id="lname" placeholder="Last name" required>
-          </div>
-        </div>
-
-        <div class="email-gender">
-          <!-- teacher's email -->
-          <div class="input-field">
-            <label for="email">email</label>
-            <input type="email" name="email" id="email" placeholder="Teacher's Email" required>
-          </div>
-  
-          <!-- gender -->
-          <div class="input-field">
-            <label for="gender">gender</label>
-            <select name="gender" id="gender">
-              <option value="">Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- teacher's classes handled -->
-        <div class="cls-handle-sec">
-          <div class="input-field">
-            <label for="addCls">
-              <span>classes handled</span> <small style="color:var(--accent-info);">(press the plus button to add classes)</small>
-            </label>
-            <select name="classes" id="addCls" bind:value={cls}>
-              <option value=""></option>
-              {#each classesList as cls}
-                <option value="{cls.category} {cls.level}{cls.subLevel}">{cls.category} {cls.level}{cls.subLevel}</option>
-              {/each}
-            </select>
-          </div>
-          <Button btnType={'button'} pry={true} on:click={addClasses}>
-            <i class="ti ti-plus"></i>
-          </Button>
-        </div>
-
-        <!-- display added classes -->
-        {#if showAddedClses > 0}
-          <div class="show-added-list">
-            <h6 class="title">added classes</h6>
-            <div class="show-added">
-              {#each allClasses as allCls}
-                <div class="addedCls">
-                  <span>{allCls}</span> 
-                  <i class="ti ti-close" data-rm-cls="{allCls}" on:click={removeClasses} on:keypress={removeClasses}></i>
-                </div>
-              {/each}
+        <section>
+          <!-- teacher's name -->
+          <div class="tname-sec">
+            <div class="input-field">
+              <label for="fname">first name</label>
+              <input type="text" name="fname" id="fname" placeholder="First name" required>
+            </div>
+            <div class="input-field">
+              <label for="lname">first name</label>
+              <input type="text" name="lname" id="lname" placeholder="Last name" required>
             </div>
           </div>
-        {/if}
 
-        <!-- teacher's major subjects -->
-        <div class="subjs-sec">
-          <!-- subjects -->
-          <div class="input-field">
-            <label for="subjs">major subjects</label>
-            <input type="text" name="subjs" list="subjData" id="subjs" bind:value={subjObj.subj}>
-            <datalist id="subjData">
-              {#each subjectList as subject}
-                <option value="{subject.title}">{subject.title}</option>
-              {/each}
-            </datalist>
+          <div class="email-gender">
+            <!-- teacher's email -->
+            <div class="input-field">
+              <label for="email">email</label>
+              <input type="email" name="email" id="email" placeholder="Teacher's Email" required>
+            </div>
+    
+            <!-- gender -->
+            <div class="input-field">
+              <label for="gender">gender</label>
+              <select name="gender" id="gender">
+                <option value="">Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
           </div>
-          
-          <!-- subject's class -->
-          <div class="input-field">
-            <label for="subjCls">subject class</label>
-            <select name="subjects" id="subjCls" bind:value={subjObj.class}>
-              <option value=""></option>
-              {#each classesList as cls}
-                <option value="{cls.category} {cls.level}{cls.subLevel}">{cls.category} {cls.level}{cls.subLevel}</option>                
-              {/each}
-            </select>
-          </div>
-          
-          <!-- add btn -->
-          <Button btnType={'button'} pry={true} on:click={addSubj}>
-            <i class="ti ti-plus"></i>
-          </Button>
-        </div>
 
-        <!-- display all added subjects -->
-        {#if showAddedSubjs > 0}
-          <div class="show-added-list">
-            <h6 class="title">added subjects</h6>
-            <div class="show-added">
-              {#each allSubjs as subj}
-                <div class="addedSubj">
-                  <div>
-                    <small>{subj.class}</small>
-                    <span>{subj.subj}</span>
+          <!-- teacher's classes handled -->
+          <div class="cls-handle-sec">
+            <div class="input-field">
+              <label for="addCls">
+                <span>class teacher</span> <small style="color:var(--accent-info);">(press the plus button to add classes)</small>
+              </label>
+              <select name="classes" id="addCls" bind:value={cls}>
+                <option value=""></option>
+                {#each classesList as cls}
+                  <option value="{cls.category} {cls.level}{cls.subLevel}">{cls.category} {cls.level}{cls.subLevel}</option>
+                {/each}
+              </select>
+            </div>
+            <Button btnType={'button'} pry={true} on:click={addClasses}>
+              <i class="ti ti-plus"></i>
+            </Button>
+          </div>
+
+          <!-- display added classes -->
+          {#if showAddedClses > 0}
+            <div class="show-added-list">
+              <h6 class="title">added classes</h6>
+              <div class="show-added">
+                {#each allClasses as allCls}
+                  <div class="addedCls">
+                    <span>{allCls}</span> 
+                    <i class="ti ti-close" data-rm-cls="{allCls}" on:click={removeClasses} on:keypress={removeClasses}></i>
                   </div>
-                  <!-- delete added subject -->
-                  <i class="ti ti-close" data-rm-subj="{subj.subj}" on:click={removeAddedSub} on:keypress={removeAddedSub}></i>
-                </div>
-              {/each}
+                {/each}
+              </div>
             </div>
-          </div>
-        {/if}
-      </section>
-
-      <footer>
-        <!-- create/update teacher -->
-        <Button {...btnProps}>
-          {#if formType === "create"}
-            create teacher
-          {:else}
-            update teacher
           {/if}
-        </Button>
-      </footer>
-    </form>
-  </div>
-</section>
+
+          <!-- teacher's major subjects -->
+          <div class="subjs-sec">
+            <!-- subjects -->
+            <div class="input-field">
+              <label for="subjs">subject Handled</label>
+              <input type="text" name="subjs" list="subjData" id="subjs" bind:value={subjObj.subj}>
+              <datalist id="subjData">
+                {#each subjectList as subject}
+                  <option value="{subject.title}">{subject.title}</option>
+                {/each}
+              </datalist>
+            </div>
+            
+            <!-- subject's class -->
+            <div class="input-field">
+              <label for="subjCls">subject class</label>
+              <select name="subjects" id="subjCls" bind:value={subjObj.class}>
+                <option value=""></option>
+                {#each classesList as cls}
+                  <option value="{cls.category} {cls.level}{cls.subLevel}">{cls.category} {cls.level}{cls.subLevel}</option>                
+                {/each}
+              </select>
+            </div>
+            
+            <!-- add btn -->
+            <Button btnType={'button'} pry={true} on:click={addSubj}>
+              <i class="ti ti-plus"></i>
+            </Button>
+          </div>
+
+          <!-- display all added subjects -->
+          {#if showAddedSubjs > 0}
+            <div class="show-added-list">
+              <h6 class="title">added subjects</h6>
+              <div class="show-added">
+                {#each allSubjs as subj}
+                  <div class="addedSubj">
+                    <div>
+                      <small>{subj.class}</small>
+                      <span>{subj.subj}</span>
+                    </div>
+                    <!-- delete added subject -->
+                    <i class="ti ti-close" data-rm-subj="{subj.subj}" on:click={removeAddedSub} on:keypress={removeAddedSub}></i>
+                  </div>
+                {/each}
+              </div>
+            </div>
+          {/if}
+        </section>
+
+        <footer>
+          <!-- create/update teacher -->
+          <Button {...btnProps}>
+            {#if formType === "create"}
+              create teacher
+            {:else}
+              update teacher
+            {/if}
+          </Button>
+        </footer>
+      </form>
+    </div>
+  </section>
+{/if}
 
 <style>
   .addModal {
@@ -278,15 +289,12 @@
     width: 100%;
     height: 100vh;
     overflow: auto;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgb(0 0 0 / 30%);
     backdrop-filter: blur(5px);
     z-index: 15;
-  }
-  .show-addModal {
-    display: flex;
   }
   .addContent {
     background-color: var(--clr-white);
@@ -373,6 +381,7 @@
   @media (max-width: 500px) {
     .addContent {
       width: 100%;
+      margin: 1.5em 0.5em;
     }
   }
 </style>

@@ -3,7 +3,7 @@ import { MONGO_URI_DEV } from "$env/static/private"
 import { MongoClient } from "mongodb";
 
 
-let client = new MongoClient(MONGO_URI)
+let client = new MongoClient(MONGO_URI_DEV)
 
 // connect to db
 export function startDB() {
@@ -11,4 +11,4 @@ export function startDB() {
   return client.connect()
 }
 
-export let db = client.db('sch') 
+export let db = client.db('schTest') 

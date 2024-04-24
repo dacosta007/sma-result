@@ -18,7 +18,7 @@
   // totalPayPercentage = parseFloat(totalPayPercentage)
 </script>
 
-<section>
+<section class="stats-container">
   <Card>
     <header class="stat-header">
       <h2>quick stat</h2>
@@ -46,6 +46,10 @@
 </section>
 
 <style>
+  .stats-container {
+    position: sticky;
+    top: 3em;
+  }
   .stat-header {
     padding: 1em 0.5em;
     border-bottom: 1px solid var(--clr-off-white);
